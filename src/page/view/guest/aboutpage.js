@@ -58,16 +58,16 @@ function AboutPage() {
           </div>
 
           <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500">
-            &copy; 2023 PT LSKK - All Right Reserved
-            <br />
-            Sistem ini dibuat untuk membantu masyarakat dalam meminta bantuan dalam keadaan darurat.
+              &copy; 2023 PT LSKK - All Right Reserved
+              <br />
+              Sistem ini dibuat untuk membantu masyarakat untuk meminta bantuan dalam keadaan darurat.
           </p>
 
           <nav aria-label="Footer Nav" className="mt-5">
             <ul className="flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-12">
               <Link to='/'>
                 <li>
-                  <button className="text-gray-700 transition hover:text-gray-700/75">
+                  <button className="relative font-sm text-gray-700 before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#FEAE1C] before:transition hover:before:scale-x-100">
                     Beranda
                   </button>
                 </li>
@@ -75,7 +75,7 @@ function AboutPage() {
 
               <Link to='/tentangkami'>
                 <li>
-                  <button className="text-gray-700 transition hover:text-gray-700/75">
+                  <button className="relative font-sm text-gray-700 before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#FEAE1C] before:transition hover:before:scale-x-100">
                     Tentang Kami
                   </button>
                 </li>

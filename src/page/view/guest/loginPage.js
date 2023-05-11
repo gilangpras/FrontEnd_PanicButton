@@ -1,66 +1,67 @@
+/* eslint-disable no-useless-constructor */
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../../assets/logo.png"
-// import Service from "../../service/services"
-// import AlertComponent from "../../components/alert/alert"
-// import { Navigate } from "react-router-dom";
+import Service from "../../service/services"
+import AlertComponent from "../../components/alert"
+import { Navigate } from "react-router-dom";
 
 export default class LoginPage extends Component {
-  // constructor() {
-  //   super();
-  // //   // this.state = {
-  // //   //   email: "",
-  // //   //   password: "",
-  // //   //   redirectToReferrer: false,
-  // //   // };
-  //   // this.OnLogin = this.OnLogin.bind(this);
-  //   // this.Validasi = this.Validasi.bind(this);
-  //   // this.handleInputChange = this.handleInputChange.bind(this);
-  // }
+  constructor() {
+    super();
+    this.state = {
+      email: "",
+      password: "",
+      redirectToReferrer: false,
+    };
+    this.OnLogin = this.OnLogin.bind(this);
+    this.Validasi = this.Validasi.bind(this);
+    this.handleInputChange = this.handleInputChange.bind(this);
+  }
 
-  // Validasi(e) {
-  //   e.preventDefault()
-  //   if (this.state.email === "") {
-  //     AlertComponent.Error("Email Harus Di isi !");
-  //   } else if (this.state.password === "") {
-  //     AlertComponent.Error("Password Harus Di isi !");
-  //   } else {
-  //     this.OnLogin();
-  //   }
-  // }
+  Validasi(e) {
+    e.preventDefault()
+    if (this.state.email === "") {
+      AlertComponent.Error("Email Harus Di isi !");
+    } else if (this.state.password === "") {
+      AlertComponent.Error("Password Harus Di isi !");
+    } else {
+      this.OnLogin();
+    }
+  }
 
-  // handleInputChange(event) {
-  //   this.setState({ [event.target.name]: event.target.value });
-  // }
+  handleInputChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
 
-  // OnLogin() {
-  //   const data = {
-  //     email: this.state.email,
-  //     password: this.state.password,
-  //   };
-  //   Service.Login(data)
-  //     .then((res) => {
-  //       if (res.data.status) {
-  //         this.setState({ redirectToReferrer: true });
-  //         localStorage.setItem("Token", res.data.token);
-  //         AlertComponent.Succes(res.data.message);
-  //         this.interval = setInterval(
-  //           () => window.location.reload(false),
-  //           1000
-  //         );
-  //       } else {
-  //         AlertComponent.Succes(res.data.message);
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       AlertComponent.Error("Email dan Password Salah !");
-  //     });
-  // }
+  OnLogin() {
+    const data = {
+      email: this.state.email,
+      password: this.state.password,
+    };
+    Service.Login(data)
+      .then((res) => {
+        if (res.data.status) {
+          this.setState({ redirectToReferrer: true });
+          localStorage.setItem("Token", res.data.token);
+          AlertComponent.Succes(res.data.message);
+          this.interval = setInterval(
+            () => window.location.reload(false),
+            1000
+          );
+        } else {
+          AlertComponent.Succes(res.data.message);
+        }
+      })
+      .catch((err) => {
+        AlertComponent.Error("Email dan Password Salah !");
+      });
+  }
   
   render() {
-  //   if (this.state.redirectToReferrer) {
-  //     return <Navigate to={"/home"} />;
-  //   }
+    if (this.state.redirectToReferrer) {
+      return <Navigate to={"/homeuser"} />;
+    }
 
     return (
       <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
@@ -94,8 +95,8 @@ export default class LoginPage extends Component {
                     type="email"
                     placeholder="Email"
                     className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    // value={this.state.email}
-                    // onChange={this.handleInputChange}
+                    value={this.state.email}
+                    onChange={this.handleInputChange}
                   />
                 </div>
               </div>
@@ -112,8 +113,8 @@ export default class LoginPage extends Component {
                     name="password"
                     type="password"
                     className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                    // value={this.state.password}
-                    // onChange={this.handleInputChange}
+                    value={this.state.password}
+                    onChange={this.handleInputChange}
                   />
                 </div>
               </div>
@@ -133,7 +134,7 @@ export default class LoginPage extends Component {
                 <button
                   type="submit"
                   className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#FEAE1C] hover:bg-[#dd9919] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#FEAE1C]"
-                  // onClick={(e) => this.Validasi(e)}
+                  onClick={(e) => this.Validasi(e)}
                 >
                   Sign in
                   <i className="fa-sharp fa-solid fa-arrow-up ml-2 mt-1"></i>

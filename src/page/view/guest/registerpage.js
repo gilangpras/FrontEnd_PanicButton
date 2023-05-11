@@ -1,82 +1,82 @@
 import React, { Component } from "react"
 import PhotoRegister from "../../assets/BackgroundRegister.png"
 import { Link } from "react-router-dom"
-// import AlertComponent from "../../components/alert/alert"
-// import Service from "../../service/services"
-// import { Navigate } from "react-router-dom"
+import AlertComponent from "../../components/alert"
+import Service from "../../service/services"
+import { Navigate } from "react-router-dom"
 
 export default class RegisterPage extends Component {
-  // constructor() {
-  //   super();
-  //   this.state = {
-  //     name: "",
-  //     email: "",
-  //     phone_number: "",
-  //     password: "",
-  //     password_confirmation: "",
-  //     redirectToReferrer: false,
-  //   };
-  //   this.handleInputChange = this.handleInputChange.bind(this);
-  //   this.onSubmit = this.onSubmit.bind(this);
-  //   this.validateInput = this.validateInput.bind(this);
-  // }
+  constructor() {
+    super();
+    this.state = {
+      name: "",
+      email: "",
+      phone_number: "",
+      password: "",
+      password_confirmation: "",
+      redirectToReferrer: false,
+    };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+    this.validateInput = this.validateInput.bind(this);
+  }
 
-  // handleInputChange(event) {
-  //   this.setState({ [event.target.name]: event.target.value });
-  // }
+  handleInputChange(event) {
+    this.setState({ [event.target.name]: event.target.value });
+  }
 
-  // validateInput(e) {
-  //   e.preventDefault()
-  //   const { name, email,phone_number, password, password_confirmation  } = this.state;
-  //   if (name === "") {
-  //     AlertComponent.Error("Nama tidak boleh kosong !");
-  //     return false;
-  //   } else if (email === "") {
-  //     AlertComponent.Error("Email tidak boleh kosong !");
-  //     return false;
-  //   } else if (password !== password_confirmation) {
-  //     AlertComponent.Error("Password tidak sama !");
-  //     return false;
-  //   } else if (phone_number === "") {
-  //     AlertComponent.Error("Nomor telepon tidak boleh kosong !");
-  //     return false;
-  //   } else {
-  //     this.onSubmit();
-  //   }
-  // }
+  validateInput(e) {
+    e.preventDefault()
+    const { name, email,phone_number, password, password_confirmation  } = this.state;
+    if (name === "") {
+      AlertComponent.Error("Nama tidak boleh kosong !");
+      return false;
+    } else if (email === "") {
+      AlertComponent.Error("Email tidak boleh kosong !");
+      return false;
+    } else if (password !== password_confirmation) {
+      AlertComponent.Error("Password tidak sama !");
+      return false;
+    } else if (phone_number === "") {
+      AlertComponent.Error("Nomor telepon tidak boleh kosong !");
+      return false;
+    } else {
+      this.onSubmit();
+    }
+  }
 
-  // onSubmit(e) {
-  //   const data = {
-  //     name: this.state.name,
-  //     email: this.state.email,
-  //     phone_number: this.state.phone_number,
-  //     password: this.state.password,
-  //     password_confirmation: this.state.password_confirmation,
-  //   };
-  //   Service.Register(data)
-  //     .then((res) => {
-  //       if (res.data.status) {
-  //         this.setState({ redirectToReferrer: true });
-  //         localStorage.setItem("Token", res.data.token);
-  //         AlertComponent.Succes(res.data.message);
-  //         this.interval = setInterval(
-  //           () => window.location.reload(false),
-  //           1000
-  //         );
-  //       } else {
-  //         AlertComponent.Succes(res.data.message);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //       AlertComponent.Error('Gagal Registrasi, Email mungkin sudah pernah digunakan!');
-  //     });
-  // }
+  onSubmit(e) {
+    const data = {
+      name: this.state.name,
+      email: this.state.email,
+      phone_number: this.state.phone_number,
+      password: this.state.password,
+      password_confirmation: this.state.password_confirmation,
+    };
+    Service.Register(data)
+      .then((res) => {
+        if (res.data.status) {
+          this.setState({ redirectToReferrer: true });
+          localStorage.setItem("Token", res.data.token);
+          AlertComponent.Succes(res.data.message);
+          this.interval = setInterval(
+            () => window.location.reload(false),
+            1000
+          );
+        } else {
+          AlertComponent.Succes(res.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        AlertComponent.Error('Gagal Registrasi, Email mungkin sudah pernah digunakan!');
+      });
+  }
 
   render() {
-  //   if (this.state.redirectToReferrer) {
-  //     return <Navigate to={"/loginpage"} />;
-  //   }
+    if (this.state.redirectToReferrer) {
+      return <Navigate to={"/login"} />;
+    }
 
   return (
 
@@ -136,8 +136,8 @@ export default class RegisterPage extends Component {
                     id="Name"
                     name="name"
                     className="mt-1 w-full px-2 h-7 border-b-2 border-gray-300 focus:outline-none focus:border-[#FEAE1C] font-poppins"
-                    // value={this.state.name}
-                    // onChange={this.handleInputChange}
+                    value={this.state.name}
+                    onChange={this.handleInputChange}
                   />
                 </div>
 
@@ -151,8 +151,8 @@ export default class RegisterPage extends Component {
                     id="Email"
                     name="email"
                     className="mt-1 w-full px-2 h-7 border-b-2 border-gray-300 focus:outline-none focus:border-[#FEAE1C] font-poppins"
-                    // value={this.state.email}
-                    // onChange={this.handleInputChange}
+                    value={this.state.email}
+                    onChange={this.handleInputChange}
                   />
                 </div>
 
@@ -166,8 +166,8 @@ export default class RegisterPage extends Component {
                     id="Phone_Number"
                     name="phone_number"
                     className="mt-1 w-full px-2 h-7 border-b-2 border-gray-300 focus:outline-none focus:border-[#FEAE1C] font-poppins"
-                    // value={this.state.phone_number}
-                    // onChange={this.handleInputChange}
+                    value={this.state.phone_number}
+                    onChange={this.handleInputChange}
                   />
                 </div>
 
@@ -184,8 +184,8 @@ export default class RegisterPage extends Component {
                     id="Password"
                     name="password"
                     className="mt-1 w-full px-2 h-7 border-b-2 border-gray-300 focus:outline-none focus:border-[#FEAE1C] font-poppins"
-                    // value={this.state.password}
-                    // onChange={this.handleInputChange}
+                    value={this.state.password}
+                    onChange={this.handleInputChange}
                   />
                 </div>
 
@@ -202,8 +202,8 @@ export default class RegisterPage extends Component {
                     id="PasswordConfirmation"
                     name="password_confirmation"
                     className="mt-1 w-full px-2 h-7 border-b-2 border-gray-300 focus:outline-none focus:border-[#FEAE1C] font-poppins"
-                    // value={this.state.password_confirmation}
-                    // onChange={this.handleInputChange}
+                    value={this.state.password_confirmation}
+                    onChange={this.handleInputChange}
                   />
                 </div>
 
@@ -219,7 +219,7 @@ export default class RegisterPage extends Component {
                 <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                   <button
                     className="inline-block shrink-0 rounded-md border border-[#FEAE1C] bg-[#FEAE1C] px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-[#FEAE1C] focus:outline-none active:text-[#e1a941]"
-                    // onClick={(e) => this.validateInput(e)}
+                    onClick={(e) => this.validateInput(e)}
                   >
                     Buat Akun
                   </button>

@@ -8,7 +8,7 @@ import "animate.css"
 function LandingPage() {
 
   return (
-    <div className="bg-gradient-to-t from-[#eb5656] to-transparent min-h-screen">
+    <div className="bg-gradient-to-t from-[#f17b7b] to-transparent min-h-screen">
       <NavLandingPage/>
       
       <main>
@@ -23,7 +23,7 @@ function LandingPage() {
               <br />
               keadaan darurat seperti bencana kebakaran dan lain sebagainya.
             </div>
-            <Link to="/LoginPage">
+            <Link to="/login">
               <button className="py-3 w-40 px-2 rounded-xl font-semibold shadow-lg drop-shadow-3xl bg-[#FEAE1C] border-2 border-[#eeb142] text-white hover:bg-white hover:text-[#FEAE1C]">
                 Get Started
                 <i className="fa-sharp fa-solid fa-chevron-right ml-2"></i>
@@ -48,7 +48,7 @@ function LandingPage() {
           <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500">
               &copy; 2023 PT LSKK - All Right Reserved
               <br />
-              Sistem ini dibuat untuk membantu masyarakat dalam meminta bantuan dalam keadaan darurat.
+              Sistem ini dibuat untuk membantu masyarakat untuk meminta bantuan dalam keadaan darurat.
           </p>
 
           <nav aria-label="Footer Nav" className="mt-5">

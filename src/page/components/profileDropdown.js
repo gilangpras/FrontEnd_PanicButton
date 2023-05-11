@@ -1,35 +1,35 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
-// import swal from "sweetalert";
-// import "react-confirm-alert/src/react-confirm-alert.css"
+import { useNavigate } from "react-router-dom";
+import swal from "sweetalert";
+import "react-confirm-alert/src/react-confirm-alert.css"
 
 function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
   }
 
-  // function handleLogout(event) {
-  //   event.preventDefault();
-  //   swal({
-  //     title: "Konfirmasi Logout",
-  //     text: "Apakah Anda yakin ingin keluar?",
-  //     icon: "warning",
-  //     buttons: ["Batal", "Logout"],
-  //     dangerMode: true,
-  //   }).then((willLogout) => {
-  //     if (willLogout) {
-  //       localStorage.clear();
-  //       navigate("/loginpage");
-  //     }
-  //   });
-  // }
+  function handleLogout(event) {
+    event.preventDefault();
+    swal({
+      title: "Konfirmasi Logout",
+      text: "Apakah Anda yakin ingin keluar?",
+      icon: "warning",
+      buttons: ["Batal", "Logout"],
+      dangerMode: true,
+    }).then((willLogout) => {
+      if (willLogout) {
+        localStorage.clear();
+        navigate("/login");
+      }
+    });
+  }
 
-  // function handleEditProfile () {
-  //   navigate ("/editprofile")
-  // }
+  function handleEditProfile () {
+    navigate ("/editprofile")
+  }
 
   return (
     <div className="relative">
@@ -48,7 +48,7 @@ function ProfileDropdown() {
                 <button
                   className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
                   role="menuitem"
-                  // onClick={handleEditProfile}
+                  onClick={handleEditProfile}
                 >
                   Edit Profile
                 </button>
@@ -60,7 +60,7 @@ function ProfileDropdown() {
               Settings
             </button>
 
-            <form className="border-t-2">
+            <form className="border-t-2" onSubmit={handleLogout}>
               <button
                 type="submit"
                 className="flex w-full items-center gap-2 rounded-lg px-4 py-2 text-sm text-red-700 hover:bg-red-50"
