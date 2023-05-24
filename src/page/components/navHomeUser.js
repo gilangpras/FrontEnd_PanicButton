@@ -33,15 +33,17 @@ function NavHomeUser() {
   return (
     <div className="bg-white">
       <header className="container shadow-sm max-w-full flex justify-between h-20 px-4 md:px-24 items-center flex-wrap">
-        <Link to={"/homeuser"}>
-        <div className="flex flex-row items-center text-center">
-          <img alt="icon-tabungGas" src={Logo} className="w-12" />
-          <h1 className="px-5 font-bold text-red-500 text-lg font-poppins"> Panic Button</h1>
-        </div>
+        <Link to={"/home"}>
+          <div className="flex flex-row items-center text-center">
+            <img alt="icon-tabungGas" src={Logo} className="w-12 " />
+            <h1 className="px-5 font-bold text-red-500 text-lg  font-poppins">
+              Panic Button
+            </h1>
+          </div>
         </Link>
 
         <div className="flex w-auto h-auto md:ml-96 items-center">
-          <h1 className="font-bold text-gray-500">
+          <h1 className="font-bold text-gray-500 hidden xl:block">
             Selamat Datang, {name}!
           </h1>
           <span
@@ -53,6 +55,7 @@ function NavHomeUser() {
         </div>
       </header>
     </div>
+
 
   )
 }

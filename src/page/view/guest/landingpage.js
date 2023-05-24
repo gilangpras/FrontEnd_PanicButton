@@ -12,30 +12,27 @@ function LandingPage() {
       <NavLandingPage/>
       
       <main>
-        <div className=" flex justify-around pt-24 mb-32">
-
-          <div className=" w-1/2 flex flex-col justify-center ml-36 animate__animated animate__slideInLeft" >
-            <h1 className="font-bold text-4xl pb-5 font-poppins animate__animated animate__slideInLeft">
-              Warning System & Panic Button
+        <div className="flex flex-col lg:flex-row justify-around pt-24 mb-32">
+          <div className="w-full lg:w-1/2 flex flex-col justify-center ml-4 lg:ml-36 animate__animated animate__slideInLeft">
+            <h1 className="font-bold text-2xl lg:text-4xl pb-5 font-poppins">
+              Warning System &amp; Panic Button
             </h1>
-            <div className="font-normal text-lg pb-12 font-poppins">
-              Berfungsi untuk membantu masyarakat ketika mengalami 
-              <br />
-              keadaan darurat seperti bencana kebakaran dan lain sebagainya.
+            <div className="font-normal text-sm lg:text-lg pb-12 font-poppins">
+              Berfungsi untuk membantu masyarakat ketika mengalami keadaan darurat seperti bencana kebakaran dan lain sebagainya.
             </div>
             <Link to="/login">
               <button className="py-3 w-40 px-2 rounded-xl font-semibold shadow-lg drop-shadow-3xl bg-[#FEAE1C] border-2 border-[#eeb142] text-white hover:bg-white hover:text-[#FEAE1C]">
-                Get Started
-                <i className="fa-sharp fa-solid fa-chevron-right ml-2"></i>
+                Get Started <i className="fa-sharp fa-solid fa-chevron-right ml-2"></i>
               </button>
             </Link>
           </div>
 
-          <div className="w-1/2 ">
-            <img src={PhotoLanding} alt="zz" className="w-[28rem] ml-24" />
+          <div className="w-full lg:w-1/2 flex justify-center">
+            <img src={PhotoLanding} alt="zz" className="w-full lg:w-[28rem] ml-4 lg:ml-24" />
           </div>
         </div>
       </main>
+
 
       <footer aria-label="Site Footer" className="bg-gray-100">
         <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -48,7 +45,7 @@ function LandingPage() {
           <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500">
               &copy; 2023 PT LSKK - All Right Reserved
               <br />
-              Sistem ini dibuat untuk membantu masyarakat untuk meminta bantuan dalam keadaan darurat.
+              Sistem ini dibuat dengan tujuan untuk membantu masyarakat dalam meminta bantuan ketika mengalami keadaan darurat.
           </p>
 
           <nav aria-label="Footer Nav" className="mt-5">

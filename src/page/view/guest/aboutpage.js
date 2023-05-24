@@ -60,7 +60,7 @@ function AboutPage() {
           <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500">
               &copy; 2023 PT LSKK - All Right Reserved
               <br />
-              Sistem ini dibuat untuk membantu masyarakat untuk meminta bantuan dalam keadaan darurat.
+              Sistem ini dibuat dengan tujuan untuk membantu masyarakat dalam meminta bantuan ketika mengalami keadaan darurat.
           </p>
 
           <nav aria-label="Footer Nav" className="mt-5">

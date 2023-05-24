@@ -15,6 +15,9 @@ class Service {
   UpdateProfile(data) {
     return Http.post("users/update", data, { headers: authHeader() });
   }
+  GetUserByGuid(data) {
+    return Http.post("users/getuserbyid", data, {headers: authHeaderStatic ()});
+  }
 
   // Bagian Devices
   RegisterDevice(data) {
@@ -25,6 +28,9 @@ class Service {
   }
   DeleteDevice(guid) {
     return Http.delete("devices/delete/"+guid, { headers: authHeader() });
+  }
+  OnPanicButton(data) {
+    return Http.post("devices/control", data, { headers: authHeader() });
   }
 }
 // eslint-disable-next-line import/no-anonymous-default-export

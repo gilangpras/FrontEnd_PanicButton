@@ -4,7 +4,6 @@ import AlertComponent from "../components/alert"
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css"
 import { getGuid } from "../helper/index";
-import { Link, Navigate } from "react-router-dom";
 
 export default class TableDevice extends Component {
   constructor() {
@@ -17,7 +16,6 @@ export default class TableDevice extends Component {
       show: false,
       handleClose: false,
       list_guid: null,
-      history: false,
       guid: '',
     };
     this.useGuid = this.useGuid.bind(this);
@@ -45,10 +43,27 @@ export default class TableDevice extends Component {
   }
 
   useGuid(data) {
-    this.setState({ history : true })
     this.setState({ guid: data.guid_device });
     localStorage.setItem('guid_device', data.guid_device);
     localStorage.setItem('name_device', data.name);
+
+    const requestData = {
+      guid_device: data.guid_device,
+      status: '1',
+    };
+
+    Services.OnPanicButton(requestData)
+      .then((res) => {
+        if (res.status) {
+          AlertComponent.Succes('Bel berhasil dihidupkan!');
+        } else {
+          AlertComponent.Error(res.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        AlertComponent.Error('Gagal mengirimkan data.');
+      });
   }
 
   deleteGuid(data) {
@@ -87,11 +102,9 @@ export default class TableDevice extends Component {
   }
 
   render() {
-    if (this.state.history) {
-      return <Navigate to={'/history-device/' + this.state.guid} />;
-    }
     return (
       <div className="flex px-4 lg:px-24 pt-1 pb-8">
+      <div className="overflow-x-auto w-full">
           <table className="w-full border divide-y-2 divide-gray-200 text-sm">
             <thead>
               <tr>
@@ -108,6 +121,7 @@ export default class TableDevice extends Component {
           <tbody>{this.renderTable()}</tbody>
         </table>
       </div>
+      </div>
     );
   }
 
@@ -123,16 +137,11 @@ export default class TableDevice extends Component {
           <td className=" whitespace-nowrap px-4 py-3 text-gray-700">{latitude}</td>
           <td className=" whitespace-nowrap px-4 py-3 text-gray-700">{longitude}</td>
           <td className=" text-center">
-            <Link
-              to={{
-                // pathname: '/sensor/'+list.guid_device,
-                // search:list.guid_device,
-              }}
-            >
-              <button className="inline-block rounded bg-[#FEAE1C] hover:bg-[#eea41c] px-4 py-2 my-1 text-xs font-medium text-white" onClick={e => this.useGuid(list)}>
-                History
-              </button>
-            </Link>
+            
+            <button className="inline-block rounded bg-yellow-400 hover:bg-yellow-500 px-4 py-2 my-1 text-xs font-medium text-white" onClick={e => this.useGuid(list)}>
+              Hidupkan
+            </button>
+
             <button className="inline-block rounded z-50 bg-red-500 hover:bg-red-600 px-4 py-2 ml-3 my-1 text-xs font-medium text-white" onClick={e => this.deleteGuid(list)}>
               Hapus
             </button>

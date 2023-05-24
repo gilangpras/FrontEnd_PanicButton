@@ -82,7 +82,6 @@ const HomeUserPanicButton = () => {
   // INI BATAS KODE  (KODE DIATAS BERISI TENTANG LEAFLET)
   // KODE DIBAWAH SETINGAN TENTANG ADD DEVICE YANG BERUPA MODAL
 
-
   const [state, setState] = useState({
     name: "",
     type_device: "",
@@ -287,7 +286,7 @@ const HomeUserPanicButton = () => {
 
       {/* INI KODINGAN UNTUK PANIC BUTTON */}
       <div className="flex flex-col lg:flex-row justify-center items-center lg:h-full mx-4 lg:mx-24">
-        <div className="flex flex-col justify-center items-center bg-white w-full lg:w-1/4 lg:max-w-md h-80 p-6 rounded-md shadow-md my-2 lg:mr-4">
+        <div className="flex flex-col justify-center items-center bg-white w-full lg:w-1/4 lg:max-w-md h-80 p-6 rounded-md shadow-lg my-2 lg:mr-4">
           <h1 className="text-3xl font-bold mb-6 text-center">Panic Button</h1>
           <p className="text-gray-600 text-center mb-6">
             Tekan tombol di bawah ini untuk mengirimkan sinyal darurat.
@@ -302,13 +301,13 @@ const HomeUserPanicButton = () => {
 
 
         {/* INI KODINGAN UNTUK SETTINGAN LEAFLET */}
-        <div className="flex h-80 w-full lg:w-3/4 shadow-md lg:ml-4 p-1 rounded-lg ">
+        <div className="flex h-80 w-full lg:w-3/4 shadow-lg lg:ml-4 p-1 rounded-lg ">
           <MapContainer ref={mapRef} center={[-6.929213436061369, 107.62671551019933]} zoom={15} className="w-full h-full z-0">
             <select
               className='absolute right-4 top-4 w-40 lg:w-56 z-[99999] h-8 lg:h-10 rounded-lg bg-white ring-1 ring-gray-300 flex items-center px-3 outline-none'
               onChange={handleSelectChange}
             >
-              <option readOnly>Pilih Area</option>
+              <option readOnly>Pilih Perangkat</option>
               {lists.map((list) => (
                 <option key={list.guid} value={list.name}>
                   {list.name}
@@ -317,8 +316,8 @@ const HomeUserPanicButton = () => {
             </select>
 
             <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              attribution='Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'
+              url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+              attribution='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
             />
 
             {lists.map((list) => (
@@ -326,17 +325,27 @@ const HomeUserPanicButton = () => {
                 key={list.guid}
                 position={[list.latitude, list.longitude]}
                 icon={locationIcon}
+                eventHandlers={{
+                  mouseover: (e) => {
+                    e.target.openPopup()
+                  }
+                }}
               >
-                <Popup>{list.name}</Popup>
+                <Popup>
+                  <div>
+                    <span className="flex justify-center font-bold">{list.name}</span>
+                    <span className="flex justify-center">Tipe Perangkat: {list.type_device}</span>
+                  </div>
+                </Popup>
               </Marker>
             ))}
           </MapContainer>
         </div>
       </div>
-      
+
 
       {/* INI KODINGAN UNTUK DAFTAR PERANGKAT */}
-      <h1 className="flex px-4 lg:px-24 text-lg font-bold mt-5 mb-1 justify-center">DAFTAR PERANGKAT</h1>
+      <h1 className="flex px-4 lg:px-24 text-xl text-gray-900 font-bold mt-5 mb-2 justify-center">DAFTAR PERANGKAT</h1>
       <TableDevice />
 
     </div>

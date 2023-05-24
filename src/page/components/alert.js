@@ -8,7 +8,7 @@ class AlertComponent {
       text: data,
       icon: "success",
       button: true,
-      timer: 10000,
+      timer: 5000,
     });
   }
   welcome(data) {

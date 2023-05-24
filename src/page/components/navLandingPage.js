@@ -6,36 +6,37 @@ export default class NavLandingPage extends Component {
 
 render() {
   return (
-    <div className="bg-white">
-      <header className="container shadow-sm max-w-full mx-auto flex flex-row h-20 px-24 items-center">
-        <Link to='/'>
-          <div className="flex flex-row items-center text-center">
-            <img alt="icon-tabungGas" src={Logo} className="w-12" />
-            <h1 className="px-5 font-bold text-red-600 text-lg font-poppins"> Panic Button</h1>
-          </div>
-        </Link>
+    <div className="bg-white shadow-sm">
+        <header className="container mx-auto px-4 lg:px-24 flex flex-row items-center justify-between h-20">
+          <Link to='/'>
+            <div className="flex items-center">
+              <img alt="icon-tabungGas" src={Logo} className="w-12" />
+              <h1 className="ml-5 font-bold text-red-600 text-lg md:text-md font-poppins"> Panic Button</h1>
+            </div>
+          </Link>
 
-        <div class="flex-1 ">
+        <div className="flex-1">
           <nav aria-label="Site Nav">
-            <ul class="flex flex-row font-medium font-poppins space-x-12 mr-14 justify-end">
+            <ul className="flex flex-row font-medium font-poppins space-x-12 mr-14 justify-end">
               <Link to='/'>
-                  <li>
-                      <text class="relative font-medium text-black before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#FEAE1C] before:transition hover:before:scale-x-100">
-                          Beranda
-                      </text>
-                  </li>
+                <li className="hidden sm:block">
+                  <span className="relative font-medium text-black before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#FEAE1C] before:transition hover:before:scale-x-100">
+                    Beranda
+                  </span>
+                </li>
               </Link>
 
               <Link to='/tentangkami'>
-                  <li>
-                      <text class="relative font-medium text-black before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#FEAE1C] before:transition hover:before:scale-x-100">
-                          Tentang Kami
-                      </text>
-                  </li>
+                <li className="hidden sm:block">
+                  <span className="relative font-medium text-black before:absolute before:-bottom-1 before:h-0.5 before:w-full before:scale-x-0 before:bg-[#FEAE1C] before:transition hover:before:scale-x-100">
+                    Tentang Kami
+                  </span>
+                </li>
               </Link>
             </ul>
           </nav>
         </div>
+
 
         <div className="flex flex-row mr-18">
         <Link to='/login'>
