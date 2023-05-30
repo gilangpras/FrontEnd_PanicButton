@@ -1,8 +1,9 @@
+import React from "react";
 import Routers from "./routes";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
+    <div>
       <Routers />
     </div>
   );

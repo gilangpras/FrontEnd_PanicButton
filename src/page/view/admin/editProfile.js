@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import AlertComponent from "../../components/alert";
 import service from "../../service/services";
 import { getGuid } from "../../helper/index";
-import NavHomeUser from "../../components/navHomeUser";
+import NavHomeAdmin from "../../components/admin/navHomeAdmin";
 
 export default class EditProfile extends Component {
   constructor() {
@@ -84,7 +84,7 @@ export default class EditProfile extends Component {
     }
     return (
       <div>
-        <NavHomeUser />
+        <NavHomeAdmin />
 
         <main className="flex flex-col items-center justify-center px-4 py-4 sm:px-6 lg:col-span-7 lg:py-8 lg:px-8 xl:col-span-5 xl:px-12">
           <div className="w-full max-w-md py-6 px-6 rounded-3xl my-5 shadow-xl border">

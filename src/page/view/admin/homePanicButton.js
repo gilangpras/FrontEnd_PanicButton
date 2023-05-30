@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import NavHomeUser from "../../components/navHomeUser";
+import NavHomeAdmin from "../../components/admin/navHomeAdmin";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
@@ -35,7 +35,7 @@ const HomeUserPanicButton = () => {
   const mapRef = useRef()
 
   const getData = (guid_user) => {
-    Service.GetDevice({ guid_user })
+    Service.GetAllDevice({ guid_user })
       .then(res => {
         const listsData = res.data.device;
         setLists(listsData);
@@ -196,7 +196,7 @@ const HomeUserPanicButton = () => {
 
   return (
     <div>
-      <NavHomeUser />
+      <NavHomeAdmin />
 
       <div className="flex lg:flex-row lg:h-full mx-4 lg:mx-24 mt-4 justify-end">
         <button
@@ -209,7 +209,7 @@ const HomeUserPanicButton = () => {
 
       <Modal open={state.open} onClose={onCloseModal} center className="overflow-hidden bg-opacity-50" styles={{ modal: { borderRadius: '10px' } }}>
         <div className="p-5 lg:mx-24 ">
-          <h2 className="text-lg font-medium mb-4 text-center mx-24">Register Device</h2>
+          <h2 className="text-lg font-medium mb-4 text-center mx-20 lg:mx-24">Register Device</h2>
           <form>
             <div className="mb-2">
               <label className="block text-gray-500">Nama Perangkat</label>
@@ -302,7 +302,7 @@ const HomeUserPanicButton = () => {
 
         {/* INI KODINGAN UNTUK SETTINGAN LEAFLET */}
         <div className="flex h-80 w-full lg:w-3/4 shadow-lg lg:ml-4 p-1 rounded-lg ">
-          <MapContainer ref={mapRef} center={[-6.929213436061369, 107.62671551019933]} zoom={15} className="w-full h-full z-0">
+          <MapContainer ref={mapRef} center={[-5.408750223738104, 105.27570990621037]} zoom={15} className="w-full h-full z-0">
             <select
               className='absolute right-4 top-4 w-40 lg:w-56 z-[99999] h-8 lg:h-10 rounded-lg bg-white ring-1 ring-gray-300 flex items-center px-3 outline-none'
               onChange={handleSelectChange}

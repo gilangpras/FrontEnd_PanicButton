@@ -6,12 +6,12 @@ export default class NavLandingPage extends Component {
 
 render() {
   return (
-    <div className="bg-white shadow-sm">
+    <div className="bg-white shadow-sm fixed top-0 w-full z-10">
         <header className="container mx-auto px-4 lg:px-24 flex flex-row items-center justify-between h-20">
           <Link to='/'>
             <div className="flex items-center">
               <img alt="icon-tabungGas" src={Logo} className="w-12" />
-              <h1 className="ml-5 font-bold text-red-600 text-lg md:text-md font-poppins"> Panic Button</h1>
+              <h1 className="ml-5 font-bold text-red-600 text-md lg:text-lg font-poppins"> Panic Button</h1>
             </div>
           </Link>
 

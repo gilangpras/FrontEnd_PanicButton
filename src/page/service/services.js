@@ -32,6 +32,17 @@ class Service {
   OnPanicButton(data) {
     return Http.post("devices/control", data, { headers: authHeader() });
   }
+  GetAllDevice(data) {
+    return Http.post("devices/getalldevice", data, { headers: authHeader() });
+  }
+
+  // Bagian History
+  AddHistory(data) {
+    return Http.post("historys/addhistory", data, { headers: authHeader() });
+  }
+  GetAllHistory(data) {
+    return Http.post("historys/getallhistory", data, { headers: authHeader() });
+  }
 }
 // eslint-disable-next-line import/no-anonymous-default-export
 export default new Service();

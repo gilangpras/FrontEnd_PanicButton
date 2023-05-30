@@ -1,20 +1,22 @@
-/* eslint-disable react/prop-types */
-import React from 'react'
-import { Outlet, Navigate } from 'react-router-dom'
-import AlertComponent from "../components/alert"
-import { getToken } from "../helper";
+import React from 'react';
+import { Outlet, Navigate } from 'react-router-dom';
 
 const RequireAuth = ({ redirectPath }) => {
+  const isAuthenticated = localStorage.getItem('Token');
 
-  const isAuthenticated = false
-
-  if (!isAuthenticated && getToken()==null) {
-    AlertComponent.Warning("Mohon Login Terlebih Dahulu !")
-    return <Navigate to={redirectPath} />
+  if (!isAuthenticated) {
+    return <Navigate to={redirectPath} />;
   }
-  return (
-    <Outlet/>
-  )
-}
 
-export default RequireAuth
+  // Periksa role pengguna di sini dan arahkan ke halaman yang sesuai
+  const userRole = localStorage.getItem('userRole');
+  if (userRole === 'admin') {
+    return <Navigate to="/home" />;
+  } else if (userRole === 'user') {
+    return <Navigate to="/homeuser" />;
+  }
+
+  return <Outlet />;
+};
+
+export default RequireAuth;

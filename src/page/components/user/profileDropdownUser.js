@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import swal from "sweetalert";
 import "react-confirm-alert/src/react-confirm-alert.css"
 
-function ProfileDropdown() {
+function ProfileDropdownUser() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -27,8 +27,8 @@ function ProfileDropdown() {
     });
   }
 
-  function handleEditProfile () {
-    navigate ("/editprofile")
+  function handleEditProfile() {
+    navigate("/editprofileuser")
   }
 
   return (
@@ -45,19 +45,12 @@ function ProfileDropdown() {
           role="menu"
         >
           <div className="p-2">
-                <button
-                  className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
-                  role="menuitem"
-                  onClick={handleEditProfile}
-                >
-                  Edit Profile
-                </button>
-
             <button
               className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
               role="menuitem"
+              onClick={handleEditProfile}
             >
-              Settings
+              Edit Profile
             </button>
 
             <form className="border-t-2" onSubmit={handleLogout}>
@@ -77,4 +70,4 @@ function ProfileDropdown() {
   );
 }
 
-export default ProfileDropdown;
+export default ProfileDropdownUser;

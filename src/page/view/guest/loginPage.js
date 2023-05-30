@@ -8,6 +8,7 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirectToReferrer, setRedirectToReferrer] = useState(false);
+  const [userRole, setUserRole] = useState("");
 
   const Validasi = (e) => {
     e.preventDefault();
@@ -39,6 +40,7 @@ const LoginPage = () => {
         if (res.data.status) {
           setRedirectToReferrer(true);
           localStorage.setItem("Token", res.data.token);
+          setUserRole(res.data.role);
           AlertComponent.Succes(res.data.message);
           setInterval(() => window.location.reload(false), 1000);
         } else {
@@ -51,13 +53,17 @@ const LoginPage = () => {
   };
 
   if (redirectToReferrer) {
-    return <Navigate to="/home" />;
+    if (userRole === "admin") {
+      return <Navigate to="/home" />;
+    } else if (userRole === "user") {
+      return <Navigate to="/homeuser" />;
+    }
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+    <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="mt-8 px-5 lg:px-0 sm:mx-auto sm:w-full sm:max-w-md">
+        <div className="bg-white py-8 px-4 sm:px-10 shadow-lg sm:rounded-lg ">
           <Link to="/">
             <div className="flex flex-row justify-center">
               <img alt="icon-tabungGas" src={Logo} className="w-28 mb-4" />

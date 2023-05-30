@@ -12,12 +12,12 @@ function LandingPage() {
       <NavLandingPage/>
       
       <main>
-        <div className="flex flex-col lg:flex-row justify-around pt-24 mb-32">
-          <div className="w-full lg:w-1/2 flex flex-col justify-center ml-4 lg:ml-36 animate__animated animate__slideInLeft">
+        <div className="flex flex-col lg:flex-row justify-around pt-52 mb-32">
+          <div className="w-2/3 lg:w-full flex flex-col justify-center ml-4 lg:ml-36 animate__animated animate__slideInLeft">
             <h1 className="font-bold text-2xl lg:text-4xl pb-5 font-poppins">
               Warning System &amp; Panic Button
             </h1>
-            <div className="font-normal text-sm lg:text-lg pb-12 font-poppins">
+            <div className="font-normal text-sm lg:text-lg pb-8 font-poppins">
               Berfungsi untuk membantu masyarakat ketika mengalami keadaan darurat seperti bencana kebakaran dan lain sebagainya.
             </div>
             <Link to="/login">
@@ -27,7 +27,7 @@ function LandingPage() {
             </Link>
           </div>
 
-          <div className="w-full lg:w-1/2 flex justify-center">
+          <div className="w-2/3 lg:w-full flex justify-center">
             <img src={PhotoLanding} alt="zz" className="w-full lg:w-[28rem] ml-4 lg:ml-24" />
           </div>
         </div>
@@ -39,7 +39,7 @@ function LandingPage() {
 
           <div className="flex justify-center text-[#C53F3F]">
             <img src={Logo} alt="IconTabungGas" className="w-12 h h-12" />
-            <h1 className="flex justify-center ml-5 items-center text-xl font-bold"> Warning System & Panic Button </h1>
+            <h1 className="flex justify-center ml-5 items-center text-lg lg:text-xl font-bold"> Warning System & Panic Button </h1>
           </div>
 
           <p className="mx-auto mt-6 max-w-md text-center leading-relaxed text-gray-500">

@@ -2,10 +2,22 @@ import LandingPage from "./guest/landingpage";
 import AboutPage from "./guest/aboutpage";
 import LoginPage from "./guest/loginPage";
 import RegisterPage from "./guest/registerpage";
-import HomeUserPanicButton from "./user/homePanicButton";
+import HomeUserPanicButton from "./admin/homePanicButton";
 import UnauthorizedPage from "./error/unAuthorized";
-import EditProfile from "./user/editProfile";
-import HomeAdmin from "./admin/homeAdmin";
-import HomeUser from "./admin/nextHomeUser";
+import EditProfile from "./admin/editProfile";
+import HomeUser from "./users/homeUser";
+import EditProfileUser from "./users/editProfileUser";
+import HistoryAdmin from "./admin/historyAdmin";
 
-export {LandingPage, AboutPage, LoginPage, RegisterPage, HomeUserPanicButton, UnauthorizedPage, EditProfile, HomeAdmin, HomeUser  }
+export {
+  LandingPage, 
+  AboutPage,
+  LoginPage, 
+  RegisterPage, 
+  HomeUserPanicButton, 
+  UnauthorizedPage, 
+  EditProfile,  
+  HomeUser, 
+  EditProfileUser,
+  HistoryAdmin  
+}
