@@ -8,6 +8,7 @@ import EditProfile from "./admin/editProfile";
 import HomeUser from "./users/homeUser";
 import EditProfileUser from "./users/editProfileUser";
 import HistoryAdmin from "./admin/historyAdmin";
+import AlertNotifAdmin from "./admin/alertNotifAdmin";
 
 export {
   LandingPage, 
@@ -19,5 +20,6 @@ export {
   EditProfile,  
   HomeUser, 
   EditProfileUser,
-  HistoryAdmin  
+  HistoryAdmin,
+  AlertNotifAdmin
 }

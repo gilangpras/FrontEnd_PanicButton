@@ -43,6 +43,9 @@ class Service {
   GetAllHistory(data) {
     return Http.post("historys/getallhistory", data, { headers: authHeader() });
   }
+  UpdateHistory(guid, data) {
+    return Http.post("historys/updatehistory/"+guid, data, { headers: authHeader() });
+  }
 }
 // eslint-disable-next-line import/no-anonymous-default-export
 export default new Service();

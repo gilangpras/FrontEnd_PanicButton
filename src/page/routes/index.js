@@ -2,7 +2,7 @@ import React from "react"
 import PrivateRoute from './privateRoute'
 import RequireAuth from './requireAuth'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import { LandingPage, AboutPage, LoginPage, RegisterPage, HomeUserPanicButton, EditProfile, UnauthorizedPage, HomeUser, EditProfileUser, HistoryAdmin } from "../view";
+import { LandingPage, AboutPage, LoginPage, RegisterPage, HomeUserPanicButton, EditProfile, UnauthorizedPage, HomeUser, EditProfileUser, HistoryAdmin, AlertNotifAdmin } from "../view";
 
 const Routers = () => {
   return (
@@ -50,6 +50,17 @@ const Routers = () => {
                 redirectPath='/noaccess'
                 role='admin'>
                 <HistoryAdmin />
+              </PrivateRoute>
+            }
+          />
+
+        <Route
+            path='/alertnotif'
+            element={
+              <PrivateRoute
+                redirectPath='/noaccess'
+                role='admin'>
+                <AlertNotifAdmin />
               </PrivateRoute>
             }
           />

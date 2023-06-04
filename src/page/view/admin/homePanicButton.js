@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef} from "react";
 import NavHomeAdmin from "../../components/admin/navHomeAdmin";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
@@ -9,6 +9,7 @@ import Service from "../../service/services"
 import AlertComponent from "../../components/alert"
 import { getGuid } from "../../helper";
 import TableDevice from "../../components/tableDevice";
+import AlertNotifAdmin from "./alertNotifAdmin";
 
 const HomeUserPanicButton = () => {
 
@@ -78,10 +79,10 @@ const HomeUserPanicButton = () => {
       mapRef.current.flyTo([latitude, longitude], 15);
     }
   };
-
   // INI BATAS KODE  (KODE DIATAS BERISI TENTANG LEAFLET)
-  // KODE DIBAWAH SETINGAN TENTANG ADD DEVICE YANG BERUPA MODAL
 
+
+  // KODE DIBAWAH SETINGAN TENTANG ADD DEVICE YANG BERUPA MODAL
   const [state, setState] = useState({
     name: "",
     type_device: "",
@@ -198,7 +199,9 @@ const HomeUserPanicButton = () => {
     <div>
       <NavHomeAdmin />
 
-      <div className="flex lg:flex-row lg:h-full mx-4 lg:mx-24 mt-4 justify-end">
+      <AlertNotifAdmin/>
+
+      <div className="flex lg:flex-row lg:h-full mx-4 lg:mx-24 mt-6 justify-end">
         <button
           className="text-sm font-semibold bg-[#FEAE1C] hover:bg-[#eea41c] text-white py-2 px-3 rounded-md"
           onClick={onOpenModal}

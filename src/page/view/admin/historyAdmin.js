@@ -3,6 +3,8 @@ import NavHomeAdmin from "../../components/admin/navHomeAdmin";
 import Services from "../../service/services"
 import { getGuid } from "../../helper/index";
 import ReactPaginate from "react-paginate";
+import AlertComponent from "../../components/alert"
+import { confirmAlert } from "react-confirm-alert";
 
 const HistoryAdmin = () => {
   const [lists, setLists] = useState([]);
@@ -14,10 +16,11 @@ const HistoryAdmin = () => {
     getData(1, 100, guid);
   }, []);
 
-  const getData = (page, limit) => {
+  const getData = (page, limit, guid) => {
     const data = {
       page: page,
       limit: limit,
+      guid: guid,
     };
     Services.GetAllHistory(data)
       .then((res) => {
@@ -29,22 +32,87 @@ const HistoryAdmin = () => {
       });
   };
 
+  // kode ini merupakan fungsi untuk button menyelesaikan kasus
+  const HistoryPopup = (guid) => {
+    confirmAlert({
+      customUI: ({ onClose }) => (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-8">
+            <h2 className="text-xl font-bold mb-4">Konfirmasi Selesai</h2>
+            <p className="text-gray-700 mb-4">Apakah Anda yakin ingin menyelesaikan kasus ini?</p>
+            <div className="flex justify-end">
+              <button
+                className="px-4 py-2 mr-2 bg-blue-500 text-white rounded"
+                onClick={() => {
+                  onClose();
+                  updateHistory(guid);
+                }}
+              >
+                Iya
+              </button>
+              <button
+                className="px-4 py-2 bg-gray-400 text-white rounded"
+                onClick={onClose}
+              >
+                Tidak
+              </button>
+            </div>
+          </div>
+        </div>
+      ),
+    });
+  };
+  
+  const updateHistory = async (guid) => {
+    const requestData = {
+      guid: guid,
+      actived: true,
+    };
+
+    try {
+      const response = await Services.UpdateHistory(requestData.guid, requestData);
+
+      if (response.status) {
+        // Proses update berhasil
+        AlertComponent.Succes(response.data.message);
+          window.location.reload(3000);
+        } else {
+          AlertComponent.Warning(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      AlertComponent.Error("Failed to update history");
+    }
+  };
+  // Sampai sinii untuk menyelesaikan kasusnya
+
+
+  // ini kode untuk klik pagination
   const handlePageClick = (data) => {
     const selectedPage = data.selected;
     setCurrentPage(selectedPage);
   };
 
+  // INI KODE UNTUK ISI DARI TABLE
   const renderTable = () => {
     const offset = currentPage * perPage;
-    const currentPageData = lists.slice(offset, offset + perPage);
+    const reversedData = [...lists].reverse(); // Membalikkan urutan seluruh data
+
+    const currentPageData = reversedData.slice(offset, offset + perPage);
 
     return currentPageData.map((list, index) => {
-      const { _id, name_device, username, latitude, longitude, actived } = list;
+      const { _id, name_device, username, clicked_at, latitude, longitude, actived } = list;
       const deviceNumber = index + 1 + offset;
+      
+
+      // Fungsi variabel moment dibawah untuk mengubah tampilan waktu menjadi format Indonesia
+      const moment = require('moment');
+      require('moment/locale/id');
+
       return (
         <tr key={_id}>
 
-          <td 
+          <td
             className=" whitespace-nowrap px-4 py-3 text-center font-medium text-gray-900"
             style={{
               maxWidth: "10px",
@@ -52,7 +120,7 @@ const HistoryAdmin = () => {
               overflow: "hidden",
               whiteSpace: "nowrap",
             }}
-            >
+          >
             {deviceNumber}
           </td>
 
@@ -83,6 +151,18 @@ const HistoryAdmin = () => {
           <td
             className="whitespace-nowrap px-4 py-3 text-gray-700"
             style={{
+              maxWidth: "200px",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {moment(clicked_at).locale('id').format('LLL')}
+          </td>
+
+          <td
+            className="whitespace-nowrap px-4 py-3 text-gray-700"
+            style={{
               maxWidth: "100px",
               textOverflow: "ellipsis",
               overflow: "hidden",
@@ -106,29 +186,35 @@ const HistoryAdmin = () => {
 
           <td className=" text-center">
             <span
-            className={`inline-block rounded px-4 py-2 my-1 text-center text-white ${actived ? 'bg-[#7DCB85]' : ''}`}
-            style={{
-              maxWidth: "100px",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-            }}
+              className={`inline-block px-1 py-1 my-1 mx-1 text-center text-xs font-medium text-white ${actived ? 'bg-[#38a8438a]' : 'bg-[#fe26266c]'}`}
+              style={{
+                maxWidth: "130px",
+                textOverflow: "ellipsis",
+                overflow: "hidden",
+                whiteSpace: "nowrap",
+              }}
             >
-            {actived ? "Aktif" : ""}
+              {actived ? "Sudah Selesai" : "Belum Selesai"}
             </span>
           </td>
 
-          <td className=" text-center">
+          <td className=" flex flex-row text-center">
             <button
-              className="inline-block rounded bg-blue-700 hover:bg-blue-800 px-4 py-2 my-1 mx-1 font-medium text-white"
+              className="inline-block rounded bg-[#FEAE1C] hover:bg-[#eea41c] px-4 py-2 my-1 mx-1 text-xs font-medium text-white"
+              onClick={() => HistoryPopup(list.guid)}
             >
-              Kasus Selesai
+              Selesaikan Kasus
             </button>
 
             <button
-              className="inline-block rounded bg-blue-700 hover:bg-blue-800 px-4 py-2 my-1 mx-1 font-medium text-white"
+              className="inline-block rounded bg-blue-700 hover:bg-blue-800 px-4 py-2 my-1 mx-1 text-xs font-medium text-white"
+              onClick={() => {
+
+                // Redirect ke Google Maps dengan koordinat yang didapatkan
+                window.location.href = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
+              }}
             >
-              Rute Lokasi
+              Rute GMaps
             </button>
           </td>
         </tr>
@@ -140,61 +226,23 @@ const HistoryAdmin = () => {
     <div className="bg-white">
       <NavHomeAdmin />
 
-      <div class="flex mx-40 my-8 bg-white transition shadow-md hover:shadow-xl">
-        <div class="rotate-180 p-2 [writing-mode:_vertical-lr]">
-          <time
-            datetime="2022-10-10"
-            class="flex items-center justify-between gap-4 text-xs font-bold uppercase text-gray-900"
-          >
-            <span>2023</span>
-            <span class="w-px flex-1 bg-gray-900/10"></span>
-            <span>copyright</span>
-          </time>
+      <div className="flex flex-col sm:flex-row w-auto bg-white mx-4 sm:mx-32 mt-10 mb-6 justify-center">
+        <div className="flex text-gray-600 items-center justify-center text-center">
+          <i class="flex mb-3 w-32 lg:w-72 text-center fa-solid fa-clock-rotate-left fa-4x"></i>
         </div>
 
-        <div class="flex justify-center m-6 sm:block sm:basis-56">
-          <div class="flex items-center justify-center content-center text-center text-red-600">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              class=" h-24 w-24 object-cover"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
+        <div className="flex flex-col w-auto">
+          <h2 class="text-xl w-auto font-bold text-gray-700 text-center lg:text-left lg:text-2xl">
+            History pengguna ketika menggunakan Panic Button
+          </h2>
 
-        <div class="flex flex-1 flex-row justify-between">
-          <div class="border-s border-gray-900/10 p-4 sm:border-l-transparent sm:p-6">
-
-            <h3 class="font-bold uppercase text-gray-900">
-              Finding the right guitar for your style - 5 tips
-            </h3>
-
-            <p class="mt-2 line-clamp-3 text-sm/relaxed text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit. Recusandae
-              dolores, possimus pariatur animi temporibus nesciunt praesentium dolore
-              sed nulla ipsum eveniet corporis quidem, mollitia itaque minus soluta,
-              voluptates neque explicabo tempora nisi culpa eius atque dignissimos.
-              Molestias explicabo corporis voluptatem?
-            </p>
-          </div>
-
-          <div class="sm:flex sm:items-end sm:justify-end">
-            <p
-              class="block bg-[#FEAE1C] hover:bg-[#eea41c] px-5 py-3 text-center text-xs font-bold uppercase text-white transition"
-            >
-              Direction
-            </p>
-          </div>
+          <p class="mt-2 text-gray-500 text-center lg:text-left lg:text-base">
+            Ini merupakan halaman History Admin yang berisi tentang Log atau History
+            dari pengguna yang meminta bantuan di website Panic Button. Data History berisi
+            tentang Nama pengguna, titik kordinat, device yang dipilih dan lain sebagainya.
+          </p>
         </div>
       </div>
-
 
       <div className="flex px-4 lg:px-24 pt-1 pb-8">
         <div className="overflow-x-auto w-full">
@@ -204,22 +252,31 @@ const HistoryAdmin = () => {
                 <th className="whitespace-nowrap px-4 py-2 text-center font-medium text-gray-900">
                   No.
                 </th>
+
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Pengguna Panic Button
+                  Nama Pengguna
                 </th>
+
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Riwayat Perangkat
                 </th>
 
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Latitude Pengguna
+                  Waktu Meminta Bantuan
                 </th>
+
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Longitude Pengguna
+                  Latitude
                 </th>
+
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Longitude
+                </th>
+
                 <th className="whitespace-nowrap px-4 py-2 text-center font-medium text-gray-900">
                   Status Kasus
                 </th>
+
                 <th className="whitespace-nowrap px-4 py-2 text-center font-medium text-gray-900">
                   Aksi
                 </th>
@@ -252,10 +309,7 @@ const HistoryAdmin = () => {
       </div>
 
     </div>
-
   )
 }
-
-
 
 export default HistoryAdmin;
