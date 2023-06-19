@@ -42,7 +42,6 @@ const LoginPage = () => {
           localStorage.setItem("Token", res.data.token);
           setUserRole(res.data.role);
           AlertComponent.Succes(res.data.message);
-          setInterval(() => window.location.reload(false), 1000);
         } else {
           AlertComponent.Succes(res.data.message);
         }

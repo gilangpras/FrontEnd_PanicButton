@@ -158,11 +158,11 @@ export default class TableDevice extends Component {
               Hidupkan
             </button>
 
-            <button className="inline-block rounded bg-[#FEAE1C] hover:bg-[#eea41c] px-4 py-2 ml-3 my-1 text-xs font-medium text-white" onClick={e => this.turnOff(list)}>
+            <button className="inline-block rounded border border-blue-700 hover:bg-blue-100 px-4 py-2 ml-3 my-1 text-xs font-bold text-blue-700" onClick={e => this.turnOff(list)}>
               Matikan
             </button>
 
-            <button className="inline-block rounded z-50 bg-red-500 hover:bg-red-600 px-4 py-2 ml-3 my-1 text-xs font-medium text-white" onClick={e => this.deleteGuid(list)}>
+            <button className="inline-block rounded z-50 border border-red-500 hover:bg-red-100 px-4 py-2 ml-3 my-1 text-xs font-medium text-red-500" onClick={e => this.deleteGuid(list)}>
               Hapus
             </button>
           </td>

@@ -9,12 +9,15 @@ import { getGuid } from "../../helper";
 import Service from "../../service/services";
 import AlertComponent from "../../components/alert"
 import jwtDecode from "jwt-decode";
+import { getDistance } from 'geolib';
 
 function HomeUser() {
   const [lists, setLists] = useState([]);
   const [requestTime, setRequestTime] = useState(null);
-  const [deviceLocation, setDeviceLocation] = useState(null);
+  const [userLocation, setUserLocation] = useState(null);
+  const [nearestDevice, setNearestDevice] = useState(null);
   const mapRef = useRef();
+
 
   useEffect(() => {
     const data = {
@@ -31,28 +34,42 @@ function HomeUser() {
       .catch((error) => {
         console.log("Error: ", error);
       });
-      
-    // ketika maps leaflet di render maka Mendapatkan lokasi perangkat
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const { latitude, longitude } = position.coords;
-          setDeviceLocation({ latitude, longitude });
-        },
-        (error) => {
-          console.error(error);
-        }
-      );
-    } else {
-      console.error("Geolocation tidak didukung oleh perangkat.");
-    }
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setUserLocation({ latitude, longitude });
+          },
+          (error) => {
+            console.error(error);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by the device.");
+      }
   }, []);
 
   useEffect(() => {
-    if (deviceLocation) {
-      mapRef.current.flyTo([deviceLocation.latitude, deviceLocation.longitude], 15);
+    if (lists.length && userLocation) {
+      // Find the nearest device based on user location
+      const nearestDevice = lists.reduce((nearest, device) => {
+        const userDistance = getDistance(userLocation, {
+          latitude: device.latitude,
+          longitude: device.longitude,
+        });
+        if (userDistance < nearest.distance) {
+          return { device, distance: userDistance };
+        }
+        return nearest;
+      }, { device: null, distance: Infinity }).device;
+
+      if (nearestDevice) {
+        const { latitude, longitude } = nearestDevice;
+        mapRef.current.flyTo([latitude, longitude], 15);
+      }
     }
-  }, [deviceLocation]);  
+  }, [lists, userLocation]);
 
   useEffect(() => {
     if (lists.length) {
@@ -62,6 +79,38 @@ function HomeUser() {
       });
     }
   }, [lists]);
+
+  const getDistanceFromUser = (latitude, longitude) => {
+    if (!userLocation) {
+      return null;
+    }
+
+    const userLat = userLocation.latitude;
+    const userLng = userLocation.longitude;
+
+    const distance = calculateDistance(userLat, userLng, latitude, longitude);
+    return distance;
+  };
+
+  // INI FUNGSI UNTUK MENGHITUNG JARAK LOKASI DARI LOKASI USER DENGAN LOKASI BEL PEMADAM KEBAKARAN
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // radius of the Earth in kilometers
+    const dLat = deg2rad(lat2 - lat1);
+    const dLon = deg2rad(lon2 - lon1);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(deg2rad(lat1)) *
+        Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const distance = R * c;
+    return distance.toFixed(2);
+  };
+
+  const deg2rad = (deg) => {
+    return deg * (Math.PI / 180);
+  };
 
   const locationIcon = L.icon({
     iconUrl:
@@ -125,60 +174,53 @@ function HomeUser() {
     const decodedToken = jwtDecode(token);
     const guid_user = decodedToken.guid; // Mengambil GUID dari token
     const username = decodedToken.name; // Mengambil GUID dari token
-
-    const historyData = {
-      guid_user: guid_user,
-      guid_device: data.guid_device,
-      name_device: data.name,
-      username: username,
-      latitude: deviceLocation.latitude,
-      longitude: deviceLocation.longitude,
-      latitude_device: data.latitude,
-      longitude_device: data.longitude,
-      clicked_at: currentTime,
-    };
-
-    Service.AddHistory(historyData)
-      .then((res) => {
-        if (res.data.status) {
-          // AlertComponent.Success(res.data.message);
-        } else {
-          // AlertComponent.Error(res.data.message);
+    
+    // INI KODE UNTUK MENGIRIM LOKASI DEVICE KETIKA MENGKLIK MINTA BANTUAN
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          
+          // INI KODE DATA YANG DIKIRIM KE DATABASE PADA COLLECTION HISTORIES
+          const historyData = {
+            guid_user: guid_user,
+            guid_device: data.guid_device,
+            name_device: data.name,
+            username: username,
+            latitude: latitude,
+            longitude: longitude,
+            latitude_device: data.latitude,
+            longitude_device: data.longitude,
+            clicked_at: currentTime,
+          };
+  
+          Service.AddHistory(historyData)
+            .then((res) => {
+              if (res.data.status) {
+                // AlertComponent.Success(res.data.message);
+              } else {
+                // AlertComponent.Error(res.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              // AlertComponent.Error("Gagal menyimpan data history.");
+            });
+        },
+        (error) => {
+          console.error(error);
+          // AlertComponent.Error("Gagal mendapatkan lokasi perangkat.");
         }
-      })
-      .catch((error) => {
-        console.error(error);
-        // AlertComponent.Error("Gagal menyimpan data history.");
-      });
-
+      );
+    } else {
+      // AlertComponent.Error("Geolocation tidak didukung oleh perangkat.");
+    }
 
     setLists((prevLists) =>
       prevLists.map((list) =>
         list.guid === data.guid ? { ...list, requestTime: currentTime } : list
       )
     );
-  };
-
-  const hitungJarak = (targetLocation) => {
-    if (deviceLocation) {
-      const deviceLatLng = L.latLng(
-        deviceLocation.latitude,
-        deviceLocation.longitude
-      );
-      const targetLatLng = L.latLng(
-        targetLocation.latitude,
-        targetLocation.longitude
-      );
-  
-      const jarakMeter = deviceLatLng.distanceTo(targetLatLng);
-      const jarakKilometer = jarakMeter / 1000;
-  
-      return {
-        meter: jarakMeter.toFixed(2),
-        kilometer: jarakKilometer.toFixed(2)
-      };
-    }
-    return null;
   };
 
   return (
@@ -188,8 +230,8 @@ function HomeUser() {
       <div className="flex py-3 h-screen w-full shadow-lg rounded-lg">
         <MapContainer
           ref={mapRef}
-          center={deviceLocation ? [deviceLocation.latitude, deviceLocation.longitude] : [0, 0]}
-          zoom={4}
+          center={nearestDevice ? [nearestDevice.latitude, nearestDevice.longitude] : [0, 0]}
+          zoom={5}
           className="w-full h-full z-0"
         >
           <select
@@ -209,8 +251,9 @@ function HomeUser() {
             attribution='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
           />
 
-          {deviceLocation && (
-            <Marker position={[deviceLocation.latitude, deviceLocation.longitude]} icon={locationIconKorban}>
+          {/* Marker lokasi pengguna */}
+          {userLocation && (
+            <Marker position={[userLocation.latitude, userLocation.longitude]} icon={locationIconKorban}>
               <Popup>Lokasi Anda</Popup>
             </Marker>
           )}
@@ -227,11 +270,10 @@ function HomeUser() {
                     {list.name}
                   </span>
 
-                  {/* Kode untuk menampilkan jarak */}
-                  {deviceLocation && (
+                  {userLocation && (
                     <div className="flex justify-center mt-2">
-                      Jarak lokasi Bantuan Terdekat: {" "}
-                      {hitungJarak(list).meter < 1000 ? `${hitungJarak(list).meter} Meter` : `${hitungJarak(list).kilometer} Kilometer`}
+                      Jarak lokasi Bantuan Terdekat:{" "}
+                      {getDistanceFromUser(list.latitude, list.longitude)} km
                     </div>
                   )}
 
@@ -241,7 +283,7 @@ function HomeUser() {
                     </button>
                   </div>
 
-                  {/* KODE UNTUK MENGAMBIL HISTORY DATE KETIKA BUTTON MINTA BANTUAN DI KLIK */}
+                  {/* KODE UNTUK MENGAMBIL HISTORY DATE/WAKTU KETIKA BUTTON MINTA BANTUAN DI KLIK */}
                   {list.requestTime && (
                     <div className="flex justify-center mt-2">
                       Waktu klik: {list.requestTime.toLocaleString()}

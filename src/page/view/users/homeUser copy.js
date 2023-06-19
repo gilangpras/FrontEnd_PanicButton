@@ -7,7 +7,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { getGuid } from "../../helper";
 import Service from "../../service/services";
-import AlertComponent from "../../components/alert"
+import AlertComponent from "../../components/alert";
 import jwtDecode from "jwt-decode";
 
 function HomeUser() {
@@ -31,7 +31,7 @@ function HomeUser() {
       .catch((error) => {
         console.log("Error: ", error);
       });
-      
+
     // ketika maps leaflet di render maka Mendapatkan lokasi perangkat
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -47,12 +47,6 @@ function HomeUser() {
       console.error("Geolocation tidak didukung oleh perangkat.");
     }
   }, []);
-
-  useEffect(() => {
-    if (deviceLocation) {
-      mapRef.current.flyTo([deviceLocation.latitude, deviceLocation.longitude], 15);
-    }
-  }, [deviceLocation]);  
 
   useEffect(() => {
     if (lists.length) {
@@ -96,27 +90,27 @@ function HomeUser() {
 
   // Kode untuk button Minta Bantuan yang dikirimkan ke TOPIC (Aktuator) RABBITMQ!
   const useGuid = (data) => {
-    localStorage.setItem('guid_device', data.guid_device);
-    localStorage.setItem('name_device', data.name);
+    localStorage.setItem("guid_device", data.guid_device);
+    localStorage.setItem("name_device", data.name);
 
     const requestData = {
       guid_device: data.guid_device,
-      status: '0',
+      status: "0",
     };
 
     Service.OnPanicButton(requestData)
       .then((res) => {
         if (res.status) {
-          AlertComponent.Succes('Bantuan akan segera datang ke lokasi!');
+          AlertComponent.Succes("Bantuan akan segera datang ke lokasi!");
         } else {
           AlertComponent.Error(res.data.message);
         }
       })
       .catch((error) => {
         console.error(error);
-        AlertComponent.Error('Gagal mengirimkan data.');
+        AlertComponent.Error("Gagal mengirimkan data.");
       });
-  
+
     // INI KODE UNTUK MENGIRIMKAN DATA DEVICE DAN LOKASI USER KETIKA MENGKLIK BUTTON MINTA BANTUAN UNTUK DISIMPAN KE DATABASE
     const currentTime = new Date();
     setRequestTime(currentTime);
@@ -125,32 +119,47 @@ function HomeUser() {
     const decodedToken = jwtDecode(token);
     const guid_user = decodedToken.guid; // Mengambil GUID dari token
     const username = decodedToken.name; // Mengambil GUID dari token
-
-    const historyData = {
-      guid_user: guid_user,
-      guid_device: data.guid_device,
-      name_device: data.name,
-      username: username,
-      latitude: deviceLocation.latitude,
-      longitude: deviceLocation.longitude,
-      latitude_device: data.latitude,
-      longitude_device: data.longitude,
-      clicked_at: currentTime,
-    };
-
-    Service.AddHistory(historyData)
-      .then((res) => {
-        if (res.data.status) {
-          // AlertComponent.Success(res.data.message);
-        } else {
-          // AlertComponent.Error(res.data.message);
+    
+    // INI KODE UNTUK MENGIRIM LOKASI DEVICE KETIKA MENGKLIK MINTA BANTUAN
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          
+          // INI KODE DATA YANG DIKIRIM KE DATABASE PADA COLLECTION HISTORIES
+          const historyData = {
+            guid_user: guid_user,
+            guid_device: data.guid_device,
+            name_device: data.name,
+            username: username,
+            latitude: latitude,
+            longitude: longitude,
+            latitude_device: data.latitude,
+            longitude_device: data.longitude,
+            clicked_at: currentTime,
+          };
+  
+          Service.AddHistory(historyData)
+            .then((res) => {
+              if (res.data.status) {
+                // AlertComponent.Success(res.data.message);
+              } else {
+                // AlertComponent.Error(res.data.message);
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+              // AlertComponent.Error("Gagal menyimpan data history.");
+            });
+        },
+        (error) => {
+          console.error(error);
+          // AlertComponent.Error("Gagal mendapatkan lokasi perangkat.");
         }
-      })
-      .catch((error) => {
-        console.error(error);
-        // AlertComponent.Error("Gagal menyimpan data history.");
-      });
-
+      );
+    } else {
+      // AlertComponent.Error("Geolocation tidak didukung oleh perangkat.");
+    }
 
     setLists((prevLists) =>
       prevLists.map((list) =>
@@ -189,7 +198,7 @@ function HomeUser() {
         <MapContainer
           ref={mapRef}
           center={deviceLocation ? [deviceLocation.latitude, deviceLocation.longitude] : [0, 0]}
-          zoom={4}
+          zoom={5}
           className="w-full h-full z-0"
         >
           <select
@@ -209,6 +218,7 @@ function HomeUser() {
             attribution='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
           />
 
+          {/* Marker lokasi pengguna */}
           {deviceLocation && (
             <Marker position={[deviceLocation.latitude, deviceLocation.longitude]} icon={locationIconKorban}>
               <Popup>Lokasi Anda</Popup>
@@ -236,7 +246,10 @@ function HomeUser() {
                   )}
 
                   <div className="flex justify-center mt-2">
-                    <button className="py-2 px-3 bg-red-600 hover:bg-red-300 active:bg-red-600 rounded-lg text-lg text-white shadow-lg" onClick={() => useGuid(list)}>
+                    <button
+                      className="py-2 px-3 bg-red-600 hover:bg-red-300 active:bg-red-600 rounded-lg text-lg text-white shadow-lg"
+                      onClick={() => useGuid(list)}
+                    >
                       Minta Bantuan!
                     </button>
                   </div>
@@ -244,9 +257,10 @@ function HomeUser() {
                   {/* KODE UNTUK MENGAMBIL HISTORY DATE KETIKA BUTTON MINTA BANTUAN DI KLIK */}
                   {list.requestTime && (
                     <div className="flex justify-center mt-2">
-                      Waktu klik: {list.requestTime.toLocaleString()}
+                      Waktu meminta bantuan: {list.requestTime.toLocaleString()}
                     </div>
                   )}
+
                 </div>
               </Popup>
             </Marker>
