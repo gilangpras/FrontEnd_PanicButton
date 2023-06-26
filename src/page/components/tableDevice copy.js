@@ -25,10 +25,8 @@ export default class TableDevice extends Component {
       name: "", // Tambahkan state untuk menyimpan nilai input nama
       type_device: "", // Tambahkan state untuk menyimpan nilai input tipe device
       guid_user: "", // Tambahkan state untuk menyimpan nilai input GUID user
-      guid_device: "",
       latitude: "", // Tambahkan state untuk menyimpan nilai input latitude
       longitude: "", // Tambahkan state untuk menyimpan nilai input longitude
-      deviceToUpdate: null, // Tambahkan state untuk menyimpan perangkat yang akan diupdate
     };
     this.useGuid = this.useGuid.bind(this);
   }
@@ -54,6 +52,7 @@ export default class TableDevice extends Component {
       });
   }
 
+  // Fungsi untuk menampilkan modal saat tombol "Edit Device" diklik
   showModal = (device) => {
     const { name, type_device, guid_user, guid_device, latitude, longitude } = device;
     this.setState({
@@ -64,23 +63,17 @@ export default class TableDevice extends Component {
       guid_device,
       latitude,
       longitude,
-      deviceToUpdate: device, // Simpan perangkat yang akan diupdate dalam state
     });
   };
 
+  // Fungsi untuk menyembunyikan modal
   hideModal = () => {
     this.setState({
       showModal: false,
-      name: "",
-      type_device: "",
-      guid_user: "",
-      guid_device: "",
-      latitude: "",
-      longitude: "",
-      deviceToUpdate: null, // Reset state perangkat yang akan diupdate
     });
   };
 
+  // Fungsi untuk menghandle perubahan input
   handleInputChange = (event) => {
     const target = event.target;
     const value = target.value;
@@ -115,6 +108,7 @@ export default class TableDevice extends Component {
         AlertComponent.Error('Gagal mengirimkan data.');
       });
   }
+
 
   // Kode untuk button matikan
   turnOff(data) {
@@ -172,29 +166,27 @@ export default class TableDevice extends Component {
       });
   }
 
-  editDevice() {
-    const { deviceToUpdate, name, type_device, guid_user, guid_device, latitude, longitude } = this.state;
+  editDevice(data) {
     const requestData = {
-      name: name,
-      type_device: type_device,
-      guid_user: guid_user,
-      guid_device: guid_device,
-      latitude: latitude,
-      longitude: longitude,
+      name: this.state.name, // Ubah dengan nilai yang diinginkan
+      type_device: this.state.type_device,
+      guid_user: this.state.guid_user,
+      guid_device: this.state.guid_device,
+      latitude: this.state.latitude,
+      longitude: this.state.longitude,
     };
-
-    Services.UpdateDevice(deviceToUpdate.guid, requestData)
-      .then((res) => {
+  
+    Services.UpdateDevice(data.guid, requestData)
+      .then(res => {
         if (res.status) {
           AlertComponent.Succes(res.data.message);
-          this.hideModal(); // Sembunyikan modal setelah berhasil mengedit perangkat
           window.location.reload(false);
         } else {
           AlertComponent.Warning(res.data.message);
         }
       })
-      .catch((error) => {
-        console.log("Error yaa ", error);
+      .catch(error => {
+        console.log('Error yaa ', error);
       });
   }
   
@@ -224,10 +216,10 @@ export default class TableDevice extends Component {
           <td className=" whitespace-nowrap px-4 py-3 text-gray-700" style={{ maxWidth: "80px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{type_device}</td>
           <td className=" whitespace-nowrap px-4 py-3 text-gray-700" style={{ maxWidth: "140px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{latitude}</td>
           <td className=" whitespace-nowrap px-4 py-3 text-gray-700" style={{ maxWidth: "140px", textOverflow: "ellipsis", overflow: "hidden", whiteSpace: "nowrap" }}>{longitude}</td>
-          <td className=" text-center flex flex-row justify-center">
+          <td className=" text-center">
 
             <button
-              className="inline-block rounded bg-[#FEAE1C] hover:bg-[#eea41c] px-4 py-2 ml-3 my-1 text-xs font-medium text-white"
+              className="inline-block rounded bg-[#FEAE1C] hover:bg-[#eea41c] px-4 py-2 my-1 text-xs font-medium text-white"
               onClick={() => this.showModal(list)}
             >
               Edit Device
@@ -330,8 +322,6 @@ export default class TableDevice extends Component {
             <button className="inline-block rounded z-50 border border-red-500 hover:bg-red-100 px-4 py-2 ml-3 my-1 text-xs font-medium text-red-500" onClick={e => this.deleteGuid(list)}>
               Hapus
             </button>
-
-            
           </td>
         </tr>
       );

@@ -18,7 +18,9 @@ function HomeUser() {
 
   useEffect(() => {
     const data = {
-      device: getGuid(),
+      // device: getGuid(),
+      page:1,
+      limit:10
     };
 
     const token = localStorage.getItem("Token");

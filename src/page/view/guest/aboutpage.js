@@ -2,6 +2,7 @@ import React from "react";
 import NavLandingPage from "../../components/navLandingPage";
 import Logo from "../../assets/logo.png"
 import LSKK from "../../assets/LSKK.png"
+import AllLogo from "../../assets/AllLogo.png"
 import { Link } from "react-router-dom";
 
 function AboutPage() {
@@ -28,6 +29,10 @@ function AboutPage() {
               Sistem ini dibangun di PT LSKK yang berada di Kota Bandung, Jawa Barat.
               Kegunaan sistem ini diharapkan mampu membantu masyarakat dalam melakukan komunikasi
               ke pihak pemadam kebakaran apabila menghadapi keadaan darurat agar bantuan dapat segera datang.
+            </div>
+
+            <div className="flex justify-center pt-5">
+              <img src={AllLogo} alt="AllLogo" className=" w-42 h-42 lg:w-1/3 lg:h-13" />
             </div>
           </div>
         </div>

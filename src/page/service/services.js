@@ -35,6 +35,9 @@ class Service {
   GetAllDevice(data) {
     return Http.post("devices/getalldevice", data, { headers: authHeader() });
   }
+  UpdateDevice(guid, data) {
+    return Http.post("devices/updatedevice/"+guid, data, { headers: authHeader() });
+  }
 
   // Bagian History
   AddHistory(data) {

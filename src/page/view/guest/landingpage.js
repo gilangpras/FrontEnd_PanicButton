@@ -3,6 +3,7 @@ import Logo from "../../assets/logo.png"
 import { Link } from "react-router-dom";
 import NavLandingPage from "../../components/navLandingPage";
 import PhotoLanding from "../../assets/landingpage.png"
+import AllLogo from "../../assets/AllLogo.png"
 import "animate.css"
 
 function LandingPage() {
@@ -31,6 +32,11 @@ function LandingPage() {
             <img src={PhotoLanding} alt="zz" className="w-full lg:w-[28rem] ml-4 lg:ml-24" />
           </div>
         </div>
+
+        <div className="flex justify-center pb-3">
+          <img src={AllLogo} alt="AllLogo" className=" w-1/2 h-11 lg:w-1/5 lg:h-11"/>
+        </div>
+
       </main>
 
 

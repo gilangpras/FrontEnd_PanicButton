@@ -32,11 +32,40 @@ const HomeUserPanicButton = () => {
 
 
   const [lists, setLists] = useState([]);
+  const [deviceLocation, setDeviceLocation] = useState(null);
 
-  const mapRef = useRef()
+  useEffect(() => {
+    // ketika maps leaflet di render maka Mendapatkan lokasi perangkat
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setDeviceLocation({ latitude, longitude });
+        },
+        (error) => {
+          console.error(error);
+        }
+      );
+    } else {
+      console.error("Geolocation tidak didukung oleh perangkat.");
+    }
+  }, []);
+
+  // useEffect(() => {
+  //   if (deviceLocation) {
+  //     mapRef.current.flyTo([deviceLocation.latitude, deviceLocation.longitude], 15);
+  //   }
+  // }, [deviceLocation]); 
+
+  const mapRef = useRef(null)
 
   const getData = (guid_user) => {
-    Service.GetAllDevice({ guid_user })
+    let data ={
+      guid_user:guid_user,
+      page:1,
+      limit:50
+    }
+    Service.GetAllDevice(data)
       .then(res => {
         const listsData = res.data.device;
         setLists(listsData);
@@ -73,12 +102,13 @@ const HomeUserPanicButton = () => {
 
   const handleSelectChange = (e) => {
     const selectedOption = e.target.value;
-    const selectedList = lists.find(list => list.name === selectedOption);
-    if (selectedList) {
+    const selectedList = lists.find((list) => list.name === selectedOption);
+    if (selectedList && mapRef.current) {
       const { latitude, longitude } = selectedList;
       mapRef.current.flyTo([latitude, longitude], 15);
     }
   };
+  
   // INI BATAS KODE  (KODE DIATAS BERISI TENTANG LEAFLET)
 
 
@@ -194,7 +224,6 @@ const HomeUserPanicButton = () => {
       });
   };
 
-
   return (
     <div>
       <NavHomeAdmin />
@@ -210,9 +239,11 @@ const HomeUserPanicButton = () => {
         </button>
       </div>
 
-      <Modal open={state.open} onClose={onCloseModal} center className="overflow-hidden bg-opacity-50" styles={{ modal: { borderRadius: '10px' } }}>
-        <div className="p-5 lg:mx-24 ">
-          <h2 className="text-lg font-medium mb-4 text-center mx-20 lg:mx-24">Register Device</h2>
+      <Modal open={state.open} onClose={onCloseModal} center className="overflow-hidden bg-opacity-50" styles={{ modal: { borderRadius: '10px', width: '80%' } }}>
+        <h2 className="text-lg font-medium  text-center mx-20 lg:mx-24">Register Device</h2>
+
+        <div className="flex lg:flex-row">
+        <div className="p-5 mx-auto" style={{ width: '100%' }}>
           <form>
             <div className="mb-2">
               <label className="block text-gray-500">Nama Perangkat</label>
@@ -282,8 +313,38 @@ const HomeUserPanicButton = () => {
               type="submit"
               onClick={(e) => validateInput(e)}
             >
-              Submit</button>
+              Submit
+            </button>
+
           </form>
+        </div>
+
+        <div className="flex pt-5 h-[460px] w-3/4 shadow-lg p-1 rounded-lg ">
+          <MapContainer 
+            ref={mapRef} 
+            center={deviceLocation ? [deviceLocation.latitude, deviceLocation.longitude] : [0, 0]} 
+            zoom={15} 
+            className="w-full h-full z-0">
+
+            <TileLayer
+              url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+              attribution='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+            />
+
+            {deviceLocation && (
+            <Marker position={[deviceLocation.latitude, deviceLocation.longitude]} icon={locationIcon}>
+            <Popup>
+                  <div>
+                    <span className="flex justify-center font-bold">Lokasi Anda</span>
+                    <span className="flex justify-center">Latitude: {[deviceLocation.latitude]}</span>
+                    <span className="flex justify-center">Longitude: {[deviceLocation.longitude]}</span>
+                  </div>
+                </Popup>
+            </Marker>
+          )}
+          </MapContainer>
+        </div>
+
         </div>
       </Modal>
 
