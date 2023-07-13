@@ -13,7 +13,8 @@ import
     UnauthorizedPage, 
     HomeUser, 
     EditProfileUser, 
-    HistoryAdmin, 
+    HistoryAdmin,
+    HistoryUser, 
      } from "../view";
 
 const Routers = () => {
@@ -85,6 +86,17 @@ const Routers = () => {
                 redirectPath='/noaccess'
                 role='user'>
                 <EditProfileUser />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path='/historyuser'
+            element={
+              <PrivateRoute
+                redirectPath='/noaccess'
+                role='user'>
+                <HistoryUser />
               </PrivateRoute>
             }
           />

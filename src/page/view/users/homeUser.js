@@ -7,14 +7,18 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { getGuid } from "../../helper";
 import Service from "../../service/services";
+import Services from "../../service/services_history"
 import AlertComponent from "../../components/alert"
 import jwtDecode from "jwt-decode";
+import Modal from "react-responsive-modal";
+import "react-responsive-modal/styles.css"
 
 function HomeUser() {
   const [lists, setLists] = useState([]);
   const [requestTime, setRequestTime] = useState(null);
   const [deviceLocation, setDeviceLocation] = useState(null);
   const mapRef = useRef();
+  const [saveImage, setSaveImage] = useState (null);
 
   useEffect(() => {
     const data = {
@@ -138,9 +142,13 @@ function HomeUser() {
       latitude_device: data.latitude,
       longitude_device: data.longitude,
       clicked_at: currentTime,
+      phone_number: state.phone_number,
+      caseType: state.caseType,
+      address_user: state.address_user,
+      image: saveImage,
     };
 
-    Service.AddHistory(historyData)
+    Services.AddHistory(historyData)
       .then((res) => {
         if (res.data.status) {
           // AlertComponent.Success(res.data.message);
@@ -181,6 +189,52 @@ function HomeUser() {
       };
     }
     return null;
+  };
+
+  // Ini state untuk menyimpan data pada modal minta bantuan
+  const [state, setState] = useState({
+    phone_number: "",
+    caseType: "",
+    address_user: "",
+    image: "",
+    redirectToReferrer: false,
+    open: false,
+  });
+
+  // ini fungsi untuk bisa mengganti inputan pada form modal minta bantuan
+  const handleInputChange = (event) => {
+    if (event.target.type === 'file') {
+      console.log(event.target.files[0]);
+      let uploaded = event.target.files[0];
+      setSaveImage(uploaded);
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        [event.target.name]: event.target.value,
+      }));
+    }
+  };
+  
+  // Ini state untuk menampung data device pada modal minta bantuan, sehingga device bisa sesuai dengan yang dipilih pada marker
+  const [selectedDevice, setSelectedDevice] = useState(null);
+
+  const onOpenModal = (data) => {
+    setSelectedDevice(data);
+    setState((prevState) => ({
+      ...prevState,
+      open: true,
+    }));
+  };
+
+  const onCloseModal = () => {
+    setState((prevState) => ({
+      ...prevState,
+      open: false,
+      phone_number: "",
+      caseType: "",
+      address_user: "",
+      image: null,
+    }));
   };
 
   return (
@@ -237,8 +291,14 @@ function HomeUser() {
                     </div>
                   )}
 
-                  <div className="flex justify-center mt-2">
+                  {/* <div className="flex justify-center mt-2">
                     <button className="py-2 px-3 bg-red-600 hover:bg-red-300 active:bg-red-600 rounded-lg text-lg text-white shadow-lg" onClick={() => useGuid(list)}>
+                      Minta Bantuan!
+                    </button>
+                  </div> */}
+
+                  <div className="flex justify-center mt-2">
+                    <button className="py-2 px-3 bg-red-600 hover:bg-red-300 active:bg-red-600 rounded-lg text-lg text-white shadow-lg" onClick={() => onOpenModal(list)}>
                       Minta Bantuan!
                     </button>
                   </div>
@@ -255,6 +315,75 @@ function HomeUser() {
           ))}
         </MapContainer>
       </div>
+      
+      
+      {state.open && selectedDevice && (
+      <Modal open={state.open} onClose={onCloseModal} center className="overflow-hidden bg-opacity-50" styles={{ modal: { borderRadius: '10px', width: '80%' } }}>
+        <h2 className="text-lg font-medium  text-center mx-20 lg:mx-24">Verifikasi Kejadian</h2>
+
+        <div className="flex lg:flex-row">
+        <div className="p-5 mx-auto" style={{ width: '100%' }}>
+          <form>
+            <div className="mb-2">
+              <label className="block text-gray-500">Kontak yang bisa dihubungi</label>
+              <input className="w-full px-3 py-2 border-2 rounded-lg"
+                type="number"
+                name="phone_number"
+                value={state.phone_number}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="block text-gray-500">Jenis Laporan</label>
+              <select
+                type="text"
+                name="caseType"
+                value={state.caseType}
+                className="w-full px-3 py-2 border-2 rounded-lg"
+                onChange={handleInputChange}
+              >
+                <option readOnly>Pilih Jenis Laporan</option>
+                <option value="Pemadaman Kebakaran">Pemadaman Kebakaran</option>
+                <option value="Penanganan Bahan Beracun">Penanganan Bahan Beracun</option>
+                <option value="Penyelamatan (Non-Kebakaran)">Penyelamatan (Non-Kebakaran)</option>
+                <option value="Kasus Lainnya">Kasus Lainnya</option>
+              </select>
+            </div>
+
+            <div className="mb-2">
+              <label className="block text-gray-500">Titik Acuan Alamat</label>
+              <input className="w-full px-3 py-2 border-2 rounded-lg"
+                type="text"
+                name="address_user"
+                value={state.address_user}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="mb-2">
+              <label className="block text-gray-500">Bukti Kejadian</label>
+              <input className="w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                type="file"
+                name="image"
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <button className="py-2 px-3 mt-3 bg-red-600 hover:bg-red-300 active:bg-red-600 rounded-lg text-lg text-white shadow-lg"
+              type="submit"
+              onClick={() => useGuid(selectedDevice)}
+            >
+              Minta Bantuan
+            </button>
+
+          </form>
+        </div>
+
+        </div>
+      </Modal>
+      )}
+
     </div>
   );
 }

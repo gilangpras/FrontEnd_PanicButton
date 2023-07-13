@@ -5,27 +5,178 @@ import { getGuid } from "../../helper/index";
 import ReactPaginate from "react-paginate";
 import AlertComponent from "../../components/alert"
 import { confirmAlert } from "react-confirm-alert";
+import logo from "../../assets/logo.png"
+import moment from "moment";
+import 'moment/locale/id'
+import jsPDF from "jspdf";
+import 'jspdf-autotable';
 
 const HistoryAdmin = () => {
   const [lists, setLists] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [perPage] = useState(10);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [allData, setAllData] = useState([]);
+  const [printData, setPrintData] = useState([]);
+  const [isDataFound, setIsDataFound] = useState(true);
+
+  // Ini fungsi untuk melakukan print pdf
+  const handlePrintPdf = () => {
+    const pdf = new jsPDF();
+    const table = document.getElementById('history-table');
+
+    // Add image to the header
+    const imageWidth = 20; // Lebar gambar dalam satuan milimeter
+    const imageHeight = 20; // Tinggi gambar dalam satuan milimeter
+    pdf.addImage(logo, 'JPEG', 20, 10, imageWidth, imageHeight);
+
+    // ini text pada kop surat
+    pdf.setFontSize(16); // Mengatur ukuran teks menjadi 16
+    pdf.setFont('poppins', 'bold'); // Mengatur ketebalan teks menjadi tebal
+    pdf.text('Pusat Penelitian Teknologi Informasi dan Komunikasi', 53, 20);
+
+    pdf.setFontSize(16); // Mengatur ukuran teks menjadi 16
+    pdf.setFont('poppins', 'bold'); // Mengatur ketebalan teks menjadi tebal
+    pdf.text('PT. Langgeng Sejahtera Kreasi Komputasi', 66, 26);
+
+    pdf.setFontSize(10); // Mengatur ukuran teks menjadi 10
+    pdf.setFont('poppins', 'semibold'); // Mengatur ketebalan teks menjadi tebal
+    pdf.text('Jl. Pelajar Pejuang 45 No.65, Lkr. Sel., Kec. Lengkong, Kota Bandung, Jawa Barat 40264', 55, 31);
+
+    // ini kode untuk garis lurus pada kop surat
+    const startX = 15; // Titik awal garis lurus (x)
+    const endX = 195; // Titik akhir garis lurus (x)
+    const startY = 33; // Tinggi garis lurus (y)
+
+    // ini text dibawah kop surat
+    pdf.setFontSize(14); // Mengatur ukuran teks menjadi 16
+    pdf.setFont('poppins', 'bold'); // Mengatur ketebalan teks menjadi tebal
+    pdf.text('Riwayat Pengguna Website Panic Button', 60, 50);
+
+    // ini kode untuk paragraph di pdf
+    pdf.setFontSize(12); // Mengatur ukuran teks menjadi 10
+    pdf.setFont('poppins', 'semibold'); // Mengatur ketebalan teks menjadi tebal
+    const paragraph = 'Surat ini melampirkan terkait data bulanan yang diperoleh dari website panic button tentang seberapa banyak masyarakat yang menggunakan website ini sebagai sarana dan prasarana untuk meminta bantuan pada petugas pemadam kebakaran. Berikut merupakan data kasus yang dilaporkan ke website panic button:';
+    const startParagraph = 15; // Titik awal paragraf (x)
+    const startHigh = 60; // Tinggi paragraf (y)
+    const maxWidth = 180; // Lebar maksimum paragraf (dalam contoh ini, 100)
+
+    // Convert table element to autotable-friendly format
+    const tableData = [];
+    const headers = [];
+    const rows = table.rows;
+
+    // Extract table headers
+    for (let i = 0; i < rows[0].cells.length; i++) {
+      const headerText = rows[0].cells[i].textContent;
+      if (headerText !== "Aksi") {
+        headers.push(headerText);
+      }
+    }
+
+    // Extract table rows
+    for (let i = 1; i < rows.length; i++) {
+      const rowData = [];
+      const cells = rows[i].cells;
+
+      for (let j = 0; j < cells.length; j++) {
+        const cellText = cells[j].textContent;
+        if (headers[j] !== "Aksi") {
+          rowData.push(cellText);
+        }
+      }
+
+      tableData.push(rowData);
+    }
+
+    const options = {
+      startY: 80,
+      theme: "grid",
+      styles: {
+        fontSize: 10,
+        textColor: [0, 0, 0],
+        lineColor: [0, 0, 0],
+        lineWidth: 0.2,
+      },
+      head: [headers],
+      body: printData.length > 0 ? printData : tableData,
+    };
+
+    if (pdf.internal.getCurrentPageInfo().pageNumber === 1) {
+      pdf.line(startX, startY, endX, startY);
+      pdf.text(paragraph, startParagraph, startHigh, {
+        align: "left",
+        maxWidth: maxWidth,
+      });
+    }
+    pdf.autoTable(options);
+    pdf.save("history.pdf");
+  };
+
+  // ini fungsi untuk dropdown filter kasus
+  function toggleDropdown() {
+    setIsOpen(!isOpen);
+  }
+
+  // ini fungsi untuk dropdown filter kasus
+  const handleSelectMonth = (month) => {
+    setSelectedMonth(month);
+    toggleDropdown();
+    const filteredData = allData.filter(
+      (item) =>
+        moment(item.clicked_at).locale("id").format("MMMM") === month
+    );
+    setLists(filteredData);
+    setPrintData(
+      filteredData.map((item, index) => [
+        index + 1,
+        item.username,
+        item.name_device,
+        moment(item.clicked_at).locale("id").format("LLL"),
+        item.caseType,
+        item.latitude,
+        item.longitude,
+        item.actived ? "Sudah Selesai" : "Belum Selesai",
+      ])
+    );
+    setIsDataFound(filteredData.length > 0);
+  };
+
+  const handleShowAllData = () => {
+    setSelectedMonth("");
+    setLists(allData);
+    setPrintData(
+      allData.map((item, index) => [
+        index + 1,
+        item.username,
+        item.name_device,
+        moment(item.clicked_at).locale("id").format("LLL"),
+        item.caseType,
+        item.latitude,
+        item.longitude,
+        item.actived ? "Sudah Selesai" : "Belum Selesai",
+      ])
+    );
+    setIsDataFound(allData.length > 0);
+  };
 
   useEffect(() => {
     const guid = getGuid();
     getData(1, 100, guid);
   }, []);
 
-  const getData = (page, limit, guid) => {
+  const getData = (page, limit, month) => {
     const data = {
       page: page,
       limit: limit,
-      guid: guid,
+      month: month, 
     };
     Services.GetAllHistory(data)
       .then((res) => {
         const lists = res.data.history;
         setLists(lists);
+        setAllData(lists);
       })
       .catch((error) => {
         console.log("Error yaa ", error);
@@ -62,7 +213,7 @@ const HistoryAdmin = () => {
       ),
     });
   };
-  
+
   const updateHistory = async (guid) => {
     const requestData = {
       guid: guid,
@@ -75,9 +226,9 @@ const HistoryAdmin = () => {
       if (response.status) {
         // Proses update berhasil
         AlertComponent.Succes(response.data.message);
-          window.location.reload(3000);
-        } else {
-          AlertComponent.Warning(response.data.message);
+        window.location.reload(3000);
+      } else {
+        AlertComponent.Warning(response.data.message);
       }
     } catch (error) {
       console.log(error);
@@ -86,11 +237,14 @@ const HistoryAdmin = () => {
   };
   // Sampai sinii untuk menyelesaikan kasusnya
 
-
   // ini kode untuk klik pagination
   const handlePageClick = (data) => {
     const selectedPage = data.selected;
     setCurrentPage(selectedPage);
+  };
+
+  const handleLihatGambar = (image) => {
+    window.open(image, "_blank");
   };
 
   // INI KODE UNTUK ISI DARI TABLE
@@ -98,12 +252,14 @@ const HistoryAdmin = () => {
     const offset = currentPage * perPage;
     const reversedData = [...lists].reverse(); // Membalikkan urutan seluruh data
 
-    const currentPageData = reversedData.slice(offset, offset + perPage);
+    // Filter data berdasarkan bulan yang dipilih
+    const filteredData = selectedMonth ? reversedData.filter(item => moment(item.clicked_at).locale('id').format('MMMM') === selectedMonth) : reversedData;
+
+    const currentPageData = filteredData.slice(offset, offset + perPage);
 
     return currentPageData.map((list, index) => {
-      const { _id, name_device, username, clicked_at, latitude, longitude, actived } = list;
+      const { _id, name_device, username, clicked_at, caseType, latitude, longitude, actived } = list;
       const deviceNumber = index + 1 + offset;
-      
 
       // Fungsi variabel moment dibawah untuk mengubah tampilan waktu menjadi format Indonesia
       const moment = require('moment');
@@ -139,7 +295,7 @@ const HistoryAdmin = () => {
           <td
             className="whitespace-nowrap px-4 py-3 text-gray-700"
             style={{
-              maxWidth: "200px",
+              maxWidth: "150px",
               textOverflow: "ellipsis",
               overflow: "hidden",
               whiteSpace: "nowrap",
@@ -158,6 +314,18 @@ const HistoryAdmin = () => {
             }}
           >
             {moment(clicked_at).locale('id').format('LLL')}
+          </td>
+
+          <td
+            className="whitespace-nowrap px-4 py-3 text-gray-700"
+            style={{
+              maxWidth: "200px",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+            }}
+          >
+            {caseType}
           </td>
 
           <td
@@ -208,17 +376,14 @@ const HistoryAdmin = () => {
 
             <button
               className="inline-block rounded bg-blue-700 hover:bg-blue-800 px-4 py-2 my-1 mx-1 text-xs font-medium text-white"
-              onClick={() => {
-
-                // Redirect ke Google Maps dengan koordinat yang didapatkan
-                window.location.href = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-              }}
+              onClick={() => handleLihatGambar(list.image)}
             >
-              Rute GMaps
+              Lihat Gambar
             </button>
           </td>
         </tr>
       );
+      
     });
   };
 
@@ -244,9 +409,46 @@ const HistoryAdmin = () => {
         </div>
       </div>
 
-      <div className="flex px-4 lg:px-24 pt-1 pb-8">
+
+      <div className="flex flex-col px-4 lg:px-24 pt-1 pb-8">
+        <div className="relative flex mb-3 justify-end">
+
+          <div className="inline-flex mr-3 items-center overflow-hidden rounded-md border bg-white">
+            <button
+              className="h-full p-2 text-gray-600 hover:bg-gray-50 hover:text-gray-700" onClick={toggleDropdown}> Filter Kasus ({selectedMonth || "Semua Bulan"})
+              <i className="flex pl-3 justify-center content-center fa-sharp fa-solid fa-sort-down" ></i>
+            </button>
+          </div>
+
+          <div className="flex justify-center">
+            <button className=" px-3 border rounded-md bg-gray-300 text-white hover:bg-gray-400" onClick={handlePrintPdf}>Print Pdf</button>
+          </div>
+
+          <div className="relative">
+            {isOpen && (
+              <div className="absolute mr-24 end-0 z-10 mt-10 w-56 max-h-48 overflow-y-auto divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg" role="menu">
+                <div className="p-2">
+                  <strong className="block p-2 text-xs font-medium uppercase text-gray-400">
+                    Bulan
+                  </strong>
+
+                  {['Semua Bulan', 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'].map((bulan) => (
+                    <button 
+                      className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700" 
+                      role="menuitem" 
+                      onClick={() => bulan === 'Semua Bulan' ? handleShowAllData() : handleSelectMonth(bulan)}
+                      >
+                      {bulan}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
         <div className="overflow-x-auto w-full">
-          <table className="w-full border divide-y-2 divide-gray-200 text-sm">
+          <table id="history-table" className="w-full border divide-y-2 divide-gray-200 text-sm">
             <thead>
               <tr>
                 <th className="whitespace-nowrap px-4 py-2 text-center font-medium text-gray-900">
@@ -266,6 +468,10 @@ const HistoryAdmin = () => {
                 </th>
 
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  Tipe Kasus
+                </th>
+
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Latitude
                 </th>
 
@@ -277,7 +483,7 @@ const HistoryAdmin = () => {
                   Status Kasus
                 </th>
 
-                <th className="whitespace-nowrap px-4 py-2 text-center font-medium text-gray-900">
+                <th className="whitespace-nowrap px-4 py-2 text-center font-medium text-gray-900" >
                   Aksi
                 </th>
               </tr>
@@ -285,6 +491,15 @@ const HistoryAdmin = () => {
 
             <tbody>{renderTable()}</tbody>
           </table>
+          
+          {/* Apabila data filter bulan kosong, maka akan menampilkan ini */}
+          {!isDataFound && (
+            <tr className="flex justify-center">
+              <td className="my-4 text-center">
+                Tidak ada data pada bulan ini
+              </td>
+            </tr>
+          )}
 
           <div className="mt-2 flex justify-start lg:justify-end">
             <ReactPaginate

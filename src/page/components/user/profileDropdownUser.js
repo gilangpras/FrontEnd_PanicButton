@@ -31,6 +31,10 @@ function ProfileDropdownUser() {
     navigate("/editprofileuser")
   }
 
+  function handleHistoryUser() {
+    navigate("/historyuser")
+  }
+
   return (
     <div className="relative">
       <button
@@ -51,6 +55,14 @@ function ProfileDropdownUser() {
               onClick={handleEditProfile}
             >
               Edit Profile
+            </button>
+
+            <button
+              className="block rounded-lg px-4 py-2 text-sm text-gray-500 hover:bg-gray-50 hover:text-gray-700"
+              role="menuitem"
+              onClick={handleHistoryUser}
+            >
+              History Minta Bantuan
             </button>
 
             <form className="border-t-2" onSubmit={handleLogout}>

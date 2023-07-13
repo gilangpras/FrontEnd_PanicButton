@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import NavHomeAdmin from "../../components/admin/navHomeAdmin";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet"
 import "leaflet/dist/leaflet.css"
 import L from "leaflet"
 import Modal from "react-responsive-modal";
@@ -33,6 +33,26 @@ const HomeUserPanicButton = () => {
 
   const [lists, setLists] = useState([]);
   const [deviceLocation, setDeviceLocation] = useState(null);
+  const [selectedLocation, setSelectedLocation] = useState(null);
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+
+  // Custom component to handle map click event
+  const MapClickHandler = () => {
+    useMapEvents({
+      click(e) {
+        setSelectedLocation(e.latlng);
+      },
+    });
+
+    return null;
+  };
+
+  useEffect(() => {
+    if (selectedLocation) {
+      console.log("Selected Location:", selectedLocation);
+    }
+  }, [selectedLocation]);
 
   useEffect(() => {
     // ketika maps leaflet di render maka Mendapatkan lokasi perangkat
@@ -60,10 +80,10 @@ const HomeUserPanicButton = () => {
   const mapRef = useRef(null)
 
   const getData = (guid_user) => {
-    let data ={
-      guid_user:guid_user,
-      page:1,
-      limit:50
+    let data = {
+      guid_user: guid_user,
+      page: 1,
+      limit: 50
     }
     Service.GetAllDevice(data)
       .then(res => {
@@ -108,7 +128,7 @@ const HomeUserPanicButton = () => {
       mapRef.current.flyTo([latitude, longitude], 15);
     }
   };
-  
+
   // INI BATAS KODE  (KODE DIATAS BERISI TENTANG LEAFLET)
 
 
@@ -118,8 +138,8 @@ const HomeUserPanicButton = () => {
     type_device: "",
     guid_user: "",
     guid_device: "",
-    longitude: "",
-    latitude: "",
+    longitude: setLongitude,
+    latitude: setLatitude,
     redirectToReferrer: false,
     open: false,
   });
@@ -197,8 +217,8 @@ const HomeUserPanicButton = () => {
       type_device: state.type_device,
       guid_user: state.guid_user,
       guid_device: state.guid_device,
-      longitude: state.longitude,
-      latitude: state.latitude,
+      latitude: latitude,
+      longitude: longitude,
     };
 
     const token = localStorage.getItem("Token");
@@ -228,7 +248,7 @@ const HomeUserPanicButton = () => {
     <div>
       <NavHomeAdmin />
 
-      <AlertNotifAdmin/>
+      <AlertNotifAdmin />
 
       <div className="flex lg:flex-row lg:h-full mx-4 lg:mx-24 mt-6 justify-end">
         <button
@@ -243,107 +263,116 @@ const HomeUserPanicButton = () => {
         <h2 className="text-lg font-medium  text-center mx-20 lg:mx-24">Register Device</h2>
 
         <div className="flex lg:flex-row">
-        <div className="p-5 mx-auto" style={{ width: '100%' }}>
-          <form>
-            <div className="mb-2">
-              <label className="block text-gray-500">Nama Perangkat</label>
-              <input className="w-full px-3 py-2 border-2 rounded-lg"
-                type="text"
-                name="name"
-                value={state.name}
-                onChange={handleInputChange}
-              />
-            </div>
+          <div className="p-5 mx-auto" style={{ width: '100%' }}>
+            <form>
+              <div className="mb-2">
+                <label className="block text-gray-500">Nama Perangkat</label>
+                <input className="w-full px-3 py-2 border-2 rounded-lg"
+                  type="text"
+                  name="name"
+                  value={state.name}
+                  onChange={handleInputChange}
+                />
+              </div>
 
-            <div className="mb-2">
-              <label className="block text-gray-500">Tipe Device</label>
-              <select
-                type="text"
-                name="type_device"
-                value={state.type_device}
-                className="w-full px-3 py-2 border-2 rounded-lg"
-                onChange={handleInputChange}
+              <div className="mb-2">
+                <label className="block text-gray-500">Tipe Device</label>
+                <select
+                  type="text"
+                  name="type_device"
+                  value={state.type_device}
+                  className="w-full px-3 py-2 border-2 rounded-lg"
+                  onChange={handleInputChange}
+                >
+                  <option readOnly>Pilih Tipe Device</option>
+                  <option value="Aktuator">Aktuator</option>
+                  <option value="Sensor">Sensor</option>
+                </select>
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-500">GUID User</label>
+                <input className="w-full px-3 py-2 border-2 rounded-lg"
+                  type="text"
+                  name="guid_user"
+                  value={state.guid_user}
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-500">GUID Device</label>
+                <input className="w-full px-3 py-2 border-2 rounded-lg"
+                  type="text"
+                  name="guid_device"
+                  value={state.guid_device}
+                  onChange={handleInputChange} />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-500">Latitude</label>
+                <input className="w-full px-3 py-2 border-2 rounded-lg"
+                  type="text"
+                  name="latitude"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                />
+              </div>
+
+              <div className="mb-2">
+                <label className="block text-gray-500">Longitude</label>
+                <input className="w-full px-3 py-2 border-2 rounded-lg"
+                  type="text"
+                  name="longitude"
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
+                />
+              </div>
+
+              <button className="bg-[#FEAE1C] text-white px-3 py-2 rounded-lg mt-4"
+                type="submit"
+                onClick={(e) => validateInput(e)}
               >
-                <option readOnly>Pilih Tipe Device</option>
-                <option value="Aktuator">Aktuator</option>
-                <option value="Sensor">Sensor</option>
-              </select>
-            </div>
+                Submit
+              </button>
 
+            </form>
+          </div>
 
-            <div className="mb-2">
-              <label className="block text-gray-500">GUID User</label>
-              <input className="w-full px-3 py-2 border-2 rounded-lg"
-                type="text"
-                name="guid_user"
-                value={state.guid_user}
+          <div className="flex pt-5 h-[460px] w-3/4 shadow-lg p-1 rounded-lg ">
+            <MapContainer
+              ref={mapRef}
+              center={deviceLocation ? [deviceLocation.latitude, deviceLocation.longitude] : [0, 0]}
+              zoom={15}
+              className="w-full h-full z-0">
+
+              <TileLayer
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                attribution='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
               />
-            </div>
 
-            <div className="mb-2">
-              <label className="block text-gray-500">GUID Device</label>
-              <input className="w-full px-3 py-2 border-2 rounded-lg"
-                type="text"
-                name="guid_device"
-                value={state.guid_device}
-                onChange={handleInputChange} />
-            </div>
+              {/* Render the custom MapClickHandler component */}
+              <MapClickHandler />
 
-            <div className="mb-2">
-              <label className="block text-gray-500">Latitude</label>
-              <input className="w-full px-3 py-2 border-2 rounded-lg"
-                type="text"
-                name="latitude"
-                value={state.latitude}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div className="mb-2">
-              <label className="block text-gray-500">Longitude</label>
-              <input className="w-full px-3 py-2 border-2 rounded-lg"
-                type="text"
-                name="longitude"
-                value={state.longitude}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <button className="bg-[#FEAE1C] text-white px-3 py-2 rounded-lg mt-4"
-              type="submit"
-              onClick={(e) => validateInput(e)}
-            >
-              Submit
-            </button>
-
-          </form>
-        </div>
-
-        <div className="flex pt-5 h-[460px] w-3/4 shadow-lg p-1 rounded-lg ">
-          <MapContainer 
-            ref={mapRef} 
-            center={deviceLocation ? [deviceLocation.latitude, deviceLocation.longitude] : [0, 0]} 
-            zoom={15} 
-            className="w-full h-full z-0">
-
-            <TileLayer
-              url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-              attribution='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
-            />
-
-            {deviceLocation && (
-            <Marker position={[deviceLocation.latitude, deviceLocation.longitude]} icon={locationIcon}>
-            <Popup>
-                  <div>
-                    <span className="flex justify-center font-bold">Lokasi Anda</span>
-                    <span className="flex justify-center">Latitude: {[deviceLocation.latitude]}</span>
-                    <span className="flex justify-center">Longitude: {[deviceLocation.longitude]}</span>
-                  </div>
-                </Popup>
-            </Marker>
-          )}
-          </MapContainer>
-        </div>
+              {/* Display selected location with marker */}
+              {selectedLocation && (
+                <Marker position={selectedLocation} icon={locationIcon} eventHandlers={{
+                  click: (e) => {
+                    setSelectedLocation(e.latlng);
+                    setLatitude(e.latlng.lat);
+                    setLongitude(e.latlng.lng);
+                  },
+                }}>
+                  <Popup>
+                    <div>
+                      <span className="flex justify-center font-bold">Lokasi yang Dipilih</span>
+                      <span className="flex justify-center">Latitude: {selectedLocation.lat}</span>
+                      <span className="flex justify-center">Longitude: {selectedLocation.lng}</span>
+                    </div>
+                  </Popup>
+                </Marker>
+              )}
+            </MapContainer>
+          </div>
 
         </div>
       </Modal>

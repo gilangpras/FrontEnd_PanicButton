@@ -128,7 +128,7 @@ export default class RegisterPage extends Component {
                     htmlFor="Name"
                     className="block text-sm font-medium text-gray-700"
                   >
-                    Username
+                    Nama Lengkap
                   </label>
 
                   <input
@@ -162,7 +162,7 @@ export default class RegisterPage extends Component {
                   </label>
 
                   <input
-                    type="String"
+                    type="number"
                     id="Phone_Number"
                     name="phone_number"
                     className="mt-1 w-full px-2 h-7 border-b-2 border-gray-300 focus:outline-none focus:border-[#FEAE1C] font-poppins"

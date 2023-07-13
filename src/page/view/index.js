@@ -8,6 +8,7 @@ import EditProfile from "./admin/editProfile";
 import HomeUser from "./users/homeUser";
 import EditProfileUser from "./users/editProfileUser";
 import HistoryAdmin from "./admin/historyAdmin";
+import HistoryUser from "./users/historyUser";
 import AlertNotifAdmin from "./admin/alertNotifAdmin";
 
 export {
@@ -21,5 +22,6 @@ export {
   HomeUser, 
   EditProfileUser,
   HistoryAdmin,
+  HistoryUser,
   AlertNotifAdmin
 }

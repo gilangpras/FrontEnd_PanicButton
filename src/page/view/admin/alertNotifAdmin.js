@@ -14,12 +14,15 @@ const AlertNotifAdmin = () => {
   const [isPopupVisible, setIsPopupVisible] = useState(true);
   const [latitudeDevice, setLatitudeDevice] = useState(null);
   const [longitudeDevice, setLongitudeDevice] = useState(null);
+  const [latitudeKorban, setLatitudeKorban] = useState(null);
+  const [longitudeKorban, setLongitudeKorban] = useState(null);
 
   useEffect(() => {
     const guid = getGuid();
     getData(1, 100, guid);
   }, []);
 
+  // INI KODE UNTUK INTERVAL 3 DETIK PADA ALERT NOTIF
   useEffect(() => {
     if (lists.length > 0) {
       const timer = setInterval(() => {
@@ -99,6 +102,17 @@ const AlertNotifAdmin = () => {
     shadowAnchor: [12, 41],
   });
 
+  const locationIconKorban = L.icon({
+    iconUrl:
+      "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    tooltipAnchor: [16, -28],
+    shadowSize: [41, 41],
+    shadowAnchor: [12, 41],
+  });
+
   // INI FUNGSI UNTUK CLOSE POPUP ALERT
   const handleDismiss = () => {
     setIsPopupVisible(false);
@@ -114,13 +128,17 @@ const AlertNotifAdmin = () => {
     const selectedList = lists[currentIndex];
     const latitudeDevice = selectedList.latitude_device;
     const longitudeDevice = selectedList.longitude_device;
+    const latitudeKorban = selectedList.latitude;
+    const longitudeKorban = selectedList.longitude;
 
     // Menampilkan pop up modal maps leaflet
     setIsPopupVisible(true);
 
-    // Menyimpan data latitude, longitude, latitude_device, dan longitude_device
+    // Menyimpan data latitude, longitude, latitude_device dan longitude_device pada state
     setLatitudeDevice(latitudeDevice);
     setLongitudeDevice(longitudeDevice);
+    setLatitudeKorban(latitudeKorban);
+    setLongitudeKorban(longitudeKorban);
   };
 
   // INI FUNGSI UNTUK MENGAMBIL RUTE JALAN PADA MAPS LEAFLET
@@ -134,10 +152,7 @@ const AlertNotifAdmin = () => {
           dragging: true,
           waypoints: [
             L.latLng(latitudeDevice, longitudeDevice),
-            L.latLng(
-              lists[currentIndex].latitude,
-              lists[currentIndex].longitude
-            ),
+            L.latLng(latitudeKorban, longitudeKorban),
           ],
           createMarker: () => { return null }
         }).addTo(map);
@@ -217,7 +232,7 @@ const AlertNotifAdmin = () => {
               <Popup open>Lokasi Pemadam Kebakaran</Popup>
               </Marker>
 
-              <Marker position={[lists[currentIndex].latitude, lists[currentIndex].longitude]} icon={locationIcon}>
+              <Marker position={[latitudeKorban, longitudeKorban]} icon={locationIconKorban}>
                 <Popup open>Lokasi Korban</Popup>
               </Marker>
             </MapContainer>
