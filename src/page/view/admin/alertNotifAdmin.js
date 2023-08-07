@@ -7,6 +7,8 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
+import markerpemadam from "../../assets/markerpemadam.png"
+import userlocation from "../../assets/userlocation.png"
 
 const AlertNotifAdmin = () => {
   const [lists, setLists] = useState([]);
@@ -92,9 +94,8 @@ const AlertNotifAdmin = () => {
   };
 
   const locationIcon = L.icon({
-    iconUrl:
-      "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
-    iconSize: [25, 41],
+    iconUrl: markerpemadam,
+    iconSize: [50, 50],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     tooltipAnchor: [16, -28],
@@ -103,9 +104,8 @@ const AlertNotifAdmin = () => {
   });
 
   const locationIconKorban = L.icon({
-    iconUrl:
-      "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
-    iconSize: [25, 41],
+    iconUrl: userlocation,
+    iconSize: [50, 50],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     tooltipAnchor: [16, -28],
@@ -229,11 +229,19 @@ const AlertNotifAdmin = () => {
               <Routing />
               
               <Marker position={[latitudeDevice, longitudeDevice]} icon={locationIcon}>
-              <Popup open>Lokasi Pemadam Kebakaran</Popup>
+                <Popup open>
+                  <span className="flex justify-center font-bold">
+                    Lokasi Pemadam Kebakaran
+                  </span>
+                </Popup>
               </Marker>
 
               <Marker position={[latitudeKorban, longitudeKorban]} icon={locationIconKorban}>
-                <Popup open>Lokasi Korban</Popup>
+                <Popup open>
+                  <span className="flex justify-center font-bold">
+                    Lokasi Korban
+                  </span>
+                </Popup>
               </Marker>
             </MapContainer>
 

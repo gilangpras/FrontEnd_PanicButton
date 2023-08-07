@@ -129,6 +129,7 @@ export default class RegisterPage extends Component {
                     className="block text-sm font-medium text-gray-700"
                   >
                     Nama Lengkap
+                    <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
                   </label>
 
                   <input
@@ -144,6 +145,7 @@ export default class RegisterPage extends Component {
                 <div className="col-span-6 sm:col-span-6 -mt-4">
                   <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
                     Email
+                    <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
                   </label>
 
                   <input
@@ -159,6 +161,7 @@ export default class RegisterPage extends Component {
                 <div className="col-span-6 sm:col-span-6 -mt-4">
                   <label htmlFor="Email" className="block text-sm font-medium text-gray-700">
                     No. Handphone
+                    <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
                   </label>
 
                   <input
@@ -177,6 +180,7 @@ export default class RegisterPage extends Component {
                     className="block text-sm font-medium text-gray-700"
                   >
                     Password
+                    <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
                   </label>
 
                   <input
@@ -195,6 +199,7 @@ export default class RegisterPage extends Component {
                     className="block text-sm font-medium text-gray-700"
                   >
                     Confirm Password
+                    <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
                   </label>
 
                   <input

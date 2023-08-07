@@ -41,7 +41,7 @@ const LoginPage = () => {
           setRedirectToReferrer(true);
           localStorage.setItem("Token", res.data.token);
           setUserRole(res.data.role);
-          AlertComponent.Succes(res.data.message);
+          AlertComponent.Succes("Anda Berhasil Login");
         } else {
           AlertComponent.Succes(res.data.message);
         }
@@ -82,6 +82,7 @@ const LoginPage = () => {
                 className="block text-sm font-medium text-gray-700"
               >
                 Email address
+                <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
               </label>
               <div className="mt-1">
                 <input
@@ -101,6 +102,7 @@ const LoginPage = () => {
                 className="block text-sm font-medium text-gray-700"
               >
                 Password
+                <span style={{ color: 'red', marginLeft: '5px' }}>*</span>
               </label>
               <div className="mt-1">
                 <input

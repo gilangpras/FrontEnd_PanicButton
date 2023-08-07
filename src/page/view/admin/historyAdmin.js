@@ -244,8 +244,10 @@ const HistoryAdmin = () => {
   };
 
   const handleLihatGambar = (image) => {
-    window.open(image, "_blank");
-  };
+    // const imageURL = `https://pptik-local.pptik.id:5140/api.v1/images/${image}`;
+    const imageURL = `https://pemadam.pptik.id/api/api.v1/images/${image}`;
+    window.open(imageURL, "_blank");
+  };  
 
   // INI KODE UNTUK ISI DARI TABLE
   const renderTable = () => {

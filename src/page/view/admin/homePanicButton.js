@@ -10,6 +10,7 @@ import AlertComponent from "../../components/alert"
 import { getGuid } from "../../helper";
 import TableDevice from "../../components/tableDevice";
 import AlertNotifAdmin from "./alertNotifAdmin";
+import markerpemadam from "../../assets/markerpemadam.png"
 
 const HomeUserPanicButton = () => {
 
@@ -111,8 +112,8 @@ const HomeUserPanicButton = () => {
 
   // Set Icon Default
   const locationIcon = L.icon({
-    iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
-    iconSize: [25, 41],
+    iconUrl: markerpemadam,
+    iconSize: [50, 50],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     tooltipAnchor: [16, -28],
@@ -138,8 +139,8 @@ const HomeUserPanicButton = () => {
     type_device: "",
     guid_user: "",
     guid_device: "",
-    longitude: setLongitude,
     latitude: setLatitude,
+    longitude: setLongitude,
     redirectToReferrer: false,
     open: false,
   });
@@ -187,7 +188,7 @@ const HomeUserPanicButton = () => {
 
   const validateInput = (e) => {
     e.preventDefault();
-    const { name, type_device, guid_user, guid_device, longitude, latitude } = state;
+    const { name, type_device, guid_user, guid_device,latitude, longitude } = state;
     if (name === "") {
       AlertComponent.Error("Nama tidak boleh kosong !");
       return false;
@@ -200,11 +201,11 @@ const HomeUserPanicButton = () => {
     } else if (guid_device === "") {
       AlertComponent.Error("GUID device tidak boleh kosong !");
       return false;
-    } else if (longitude === "") {
-      AlertComponent.Error("Longitude tidak boleh kosong !");
-      return false;
     } else if (latitude === "") {
       AlertComponent.Error("Latitude tidak boleh kosong !");
+      return false;
+    } else if (longitude === "") {
+      AlertComponent.Error("Longitude tidak boleh kosong !");
       return false;
     } else {
       onSubmit();
@@ -283,8 +284,8 @@ const HomeUserPanicButton = () => {
                   value={state.type_device}
                   className="w-full px-3 py-2 border-2 rounded-lg"
                   onChange={handleInputChange}
-                >
-                  <option readOnly>Pilih Tipe Device</option>
+                > 
+                  <option value="" disabled selected>Pilih Tipe Device</option>
                   <option value="Aktuator">Aktuator</option>
                   <option value="Sensor">Sensor</option>
                 </select>
@@ -399,8 +400,8 @@ const HomeUserPanicButton = () => {
             <select
               className='absolute right-4 top-4 w-40 lg:w-56 z-[99999] h-8 lg:h-10 rounded-lg bg-white ring-1 ring-gray-300 flex items-center px-3 outline-none'
               onChange={handleSelectChange}
-            >
-              <option readOnly>Pilih Perangkat</option>
+            > 
+              <option value="" disabled selected>Pilih Perangkat</option>
               {lists.map((list) => (
                 <option key={list.guid} value={list.name}>
                   {list.name}
