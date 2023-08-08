@@ -132,11 +132,11 @@ const HistoryAdmin = () => {
       filteredData.map((item, index) => [
         index + 1,
         item.username,
+        item.phone_number,
         item.name_device,
         moment(item.clicked_at).locale("id").format("LLL"),
         item.caseType,
-        item.latitude,
-        item.longitude,
+        `${item.latitude}, ${item.longitude}`,
         item.actived ? "Sudah Selesai" : "Belum Selesai",
       ])
     );
@@ -150,11 +150,11 @@ const HistoryAdmin = () => {
       allData.map((item, index) => [
         index + 1,
         item.username,
+        item.phone_number,
         item.name_device,
         moment(item.clicked_at).locale("id").format("LLL"),
         item.caseType,
-        item.latitude,
-        item.longitude,
+        `${item.latitude}, ${item.longitude}`,
         item.actived ? "Sudah Selesai" : "Belum Selesai",
       ])
     );
@@ -260,7 +260,7 @@ const HistoryAdmin = () => {
     const currentPageData = filteredData.slice(offset, offset + perPage);
 
     return currentPageData.map((list, index) => {
-      const { _id, name_device, username, clicked_at, caseType, latitude, longitude, actived } = list;
+      const { _id, name_device, username, phone_number, clicked_at, caseType, latitude, longitude, actived } = list;
       const deviceNumber = index + 1 + offset;
 
       // Fungsi variabel moment dibawah untuk mengubah tampilan waktu menjadi format Indonesia
@@ -285,7 +285,7 @@ const HistoryAdmin = () => {
           <td
             className="whitespace-nowrap px-4 py-3 text-gray-700"
             style={{
-              maxWidth: "30px",
+              maxWidth: "50px",
               textOverflow: "ellipsis",
               overflow: "hidden",
               whiteSpace: "nowrap",
@@ -297,7 +297,19 @@ const HistoryAdmin = () => {
           <td
             className="whitespace-nowrap px-4 py-3 text-gray-700"
             style={{
-              maxWidth: "150px",
+              maxWidth: "200px",
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
+            }}
+          >
+            +62{phone_number}
+          </td>
+
+          <td
+            className="whitespace-nowrap px-4 py-3 text-gray-700"
+            style={{
+              maxWidth: "250px",
               textOverflow: "ellipsis",
               overflow: "hidden",
               whiteSpace: "nowrap",
@@ -333,28 +345,16 @@ const HistoryAdmin = () => {
           <td
             className="whitespace-nowrap px-4 py-3 text-gray-700"
             style={{
-              maxWidth: "100px",
+              maxWidth: "30px",
               textOverflow: "ellipsis",
               overflow: "hidden",
               whiteSpace: "nowrap",
             }}
           >
-            {latitude}
+            {latitude},{longitude}
           </td>
 
-          <td
-            className="whitespace-nowrap px-4 py-3 text-gray-700"
-            style={{
-              maxWidth: "100px",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-              whiteSpace: "nowrap",
-            }}
-          >
-            {longitude}
-          </td>
-
-          <td className=" text-center">
+          <td className="text-center">
             <span
               className={`inline-block px-1 py-1 my-1 mx-1 text-center text-xs font-medium text-white ${actived ? 'bg-[#38a8438a]' : 'bg-[#fe26266c]'}`}
               style={{
@@ -368,7 +368,7 @@ const HistoryAdmin = () => {
             </span>
           </td>
 
-          <td className=" flex flex-row text-center">
+          <td className=" flex flex-row text-center w-64">
             <button
               className="inline-block rounded bg-[#FEAE1C] hover:bg-[#eea41c] px-4 py-2 my-1 mx-1 text-xs font-medium text-white"
               onClick={() => HistoryPopup(list.guid)}
@@ -462,6 +462,10 @@ const HistoryAdmin = () => {
                 </th>
 
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
+                  No. Handphone
+                </th>
+
+                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
                   Riwayat Perangkat
                 </th>
 
@@ -474,11 +478,7 @@ const HistoryAdmin = () => {
                 </th>
 
                 <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Latitude
-                </th>
-
-                <th className="whitespace-nowrap px-4 py-2 text-left font-medium text-gray-900">
-                  Longitude
+                  Koordinat
                 </th>
 
                 <th className="whitespace-nowrap px-4 py-2 text-center font-medium text-gray-900">
@@ -503,7 +503,7 @@ const HistoryAdmin = () => {
             </tr>
           )}
 
-          <div className="mt-2 flex justify-start lg:justify-end">
+          <div className="mt-3 mb-4 flex justify-start lg:justify-end">
             <ReactPaginate
               previousLabel={<span className="mx-2 font-medium text-gray-800 hover:bg-blue-200">previous</span>}
               nextLabel={<span className="mx-2 font-medium text-gray-800 hover:bg-blue-200">next</span>}

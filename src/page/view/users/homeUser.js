@@ -323,7 +323,7 @@ function HomeUser() {
                   {/* Kode untuk menampilkan jarak */}
                   {deviceLocation && (
                     <div className="flex justify-center mt-2">
-                      Jarak lokasi Bantuan Terdekat: {" "}
+                      Jarak lokasi Bantuan: {" "}
                       {hitungJarak(list).meter < 1000 ? `${hitungJarak(list).meter} Meter` : `${hitungJarak(list).kilometer} Kilometer`}
                     </div>
                   )}
@@ -423,7 +423,7 @@ function HomeUser() {
                   {errors.image && <span className="text-red-500">{errors.image}</span>}
                 </div>
 
-                <button className="py-2 px-3 mt-3 bg-red-600 hover:bg-red-300 active:bg-red-600 rounded-lg text-lg text-white shadow-lg"
+                <button className="py-1.5 px-5 mt-3 bg-red-600 hover:bg-red-300 active:bg-red-600 rounded-lg text-md text-white shadow-lg"
                   type="submit"
                   onClick={(e) => {
                     e.preventDefault();
@@ -432,7 +432,7 @@ function HomeUser() {
                     }
                   }}
                 >
-                  Minta Bantuan
+                  Kirim
                 </button>
 
               </form>

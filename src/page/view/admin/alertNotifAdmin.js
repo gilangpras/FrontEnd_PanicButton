@@ -8,7 +8,6 @@ import "leaflet/dist/leaflet.css";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
 import markerpemadam from "../../assets/markerpemadam.png"
-import userlocation from "../../assets/userlocation.png"
 
 const AlertNotifAdmin = () => {
   const [lists, setLists] = useState([]);
@@ -104,8 +103,8 @@ const AlertNotifAdmin = () => {
   });
 
   const locationIconKorban = L.icon({
-    iconUrl: userlocation,
-    iconSize: [50, 50],
+    iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
+    iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     tooltipAnchor: [16, -28],
@@ -183,21 +182,21 @@ const AlertNotifAdmin = () => {
               </p>
 
               <div className="mt-4 flex gap-2">
-                <button 
+                <button
                   className="inline-flex text-sm items-center gap-2 rounded-lg bg-indigo-600 px-4 py-2 text-white hover:bg-indigo-700"
                   onClick={handleGMapsRoute}>
-                   Rute GMaps 
+                  Rute GMaps
                   <i className="fa-solid fa-up-right-from-square"></i>
                 </button>
 
-                <button 
+                <button
                   className="block text-sm border border-indigo-600 rounded-lg px-4 py-2 text-indigo-700 transition hover:bg-gray-100"
                   onClick={ruteLeaflet}
                 >
                   Rute Leaflet
                 </button>
 
-                <button 
+                <button
                   className="block text-sm rounded-lg px-4 py-2 text-gray-700 transition hover:bg-gray-100"
                   onClick={turnOff}>
                   Matikan Bell
@@ -225,9 +224,9 @@ const AlertNotifAdmin = () => {
                 url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
                 attribution='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
               />
-              
+
               <Routing />
-              
+
               <Marker position={[latitudeDevice, longitudeDevice]} icon={locationIcon}>
                 <Popup open>
                   <span className="flex justify-center font-bold">
