@@ -12,6 +12,8 @@ const RequireAuth = ({ redirectPath }) => {
   const userRole = localStorage.getItem('userRole');
   if (userRole === 'admin') {
     return <Navigate to="/home" />;
+  } else  if (userRole === 'super-admin') {
+    return <Navigate to="/home" />;
   } else if (userRole === 'user') {
     return <Navigate to="/homeuser" />;
   }

@@ -36,12 +36,13 @@ export function getGuid() {
   }
 }
 
-export function getName() {
+export function getRole() {
   const token = localStorage.getItem("Token");
   const decoded = jwtDecode(token);
   if (token !== null) {
-    return decoded.name;
+    return decoded.role;
   } else {
     return null;
   }
 }
+

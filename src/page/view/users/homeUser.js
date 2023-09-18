@@ -13,7 +13,8 @@ import jwtDecode from "jwt-decode";
 import Modal from "react-responsive-modal";
 import "react-responsive-modal/styles.css"
 import Markerpemadam from "../../assets/markerpemadam.png"
-import userlocation from "../../assets/userlocation.png"
+import userlocation from "../../assets/location.png"
+import { URL_MAPS } from "../../service/endpoint";
 
 function HomeUser() {
   const [lists, setLists] = useState([]);
@@ -84,8 +85,8 @@ function HomeUser() {
   });
 
   const locationIconKorban = L.icon({
-    iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png",
-    iconSize: [25, 41],
+    iconUrl:userlocation,
+    iconSize: [60, 60],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     tooltipAnchor: [16, -28],
@@ -294,8 +295,8 @@ function HomeUser() {
           </select>
 
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-            attribution='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+            url={URL_MAPS}
+            attribution='Map data © <a href="https://openstreetmap.org">PPTIK & LSKK</a> contributors'
           />
 
           {deviceLocation && (
@@ -391,6 +392,9 @@ function HomeUser() {
                     <option value="Pemadaman Kebakaran">Pemadaman Kebakaran</option>
                     <option value="Penanganan Bahan Beracun">Penanganan Bahan Beracun</option>
                     <option value="Penyelamatan (Non-Kebakaran)">Penyelamatan (Non-Kebakaran)</option>
+                    <option value="Terjadi Kecelakaan">Terjadi Kecelakaan</option>
+                    <option value="Terjadi Pencurian">Terjadi Pencurian</option>
+                    <option value="Bantuan Medis">Bantuan Medis</option>
                     <option value="Kasus Lainnya">Kasus Lainnya</option>
                   </select>
                   {errors.caseType && <span className="text-red-500">{errors.caseType}</span>}

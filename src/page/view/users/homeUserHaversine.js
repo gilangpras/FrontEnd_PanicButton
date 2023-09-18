@@ -10,6 +10,7 @@ import Service from "../../service/services";
 import AlertComponent from "../../components/alert"
 import jwtDecode from "jwt-decode";
 import { getDistance } from 'geolib';
+import { URL_MAPS } from "../../service/endpoint";
 
 function HomeUser() {
   const [lists, setLists] = useState([]);
@@ -247,8 +248,8 @@ function HomeUser() {
           </select>
 
           <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-            attribution='Map data © <a href="https://openstreetmap.org">OpenStreetMap</a> contributors'
+            url={URL_MAPS}
+            attribution='Map data © <a href="https://openstreetmap.org">PPTIK & LSKK</a> contributors'
           />
 
           {/* Marker lokasi pengguna */}

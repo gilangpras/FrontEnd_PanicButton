@@ -1,27 +1,25 @@
-import React from "react"
-import PrivateRoute from './privateRoute'
-import RequireAuth from './requireAuth'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import 
-  { 
-    LandingPage, 
-    AboutPage, 
-    LoginPage, 
-    RegisterPage, 
-    HomeUserPanicButton, 
-    EditProfile, 
-    UnauthorizedPage, 
-    HomeUser, 
-    EditProfileUser, 
-    HistoryAdmin,
-    HistoryUser, 
-     } from "../view";
+import React from "react";
+import PrivateRoute from "./privateRoute";
+import RequireAuth from "./requireAuth";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  LandingPage,
+  AboutPage,
+  LoginPage,
+  RegisterPage,
+  HomeUserPanicButton,
+  EditProfile,
+  UnauthorizedPage,
+  HomeUser,
+  EditProfileUser,
+  HistoryAdmin,
+  HistoryUser,
+} from "../view";
 
 const Routers = () => {
   return (
     <BrowserRouter>
       <Routes>
-
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
         <Route path="/tentangkami" element={<AboutPage />} />
@@ -30,38 +28,30 @@ const Routers = () => {
         <Route path="/noaccess" element={<UnauthorizedPage />} />
 
         {/* Parent Routes Auth Requirement */}
-        <Route element={<RequireAuth redirectPath='/login' />}>
-
-        {/* Private Routes Admin */}
-        <Route
-            path='/home'
+        <Route element={<RequireAuth redirectPath="/login" />}>
+          {/* Private Routes Admin */}
+          <Route
+            path="/home"
             element={
-              <PrivateRoute
-                redirectPath='/noaccess'
-                role='admin'
-              >
+              <PrivateRoute redirectPath="/noaccess" role="admin">
                 <HomeUserPanicButton />
               </PrivateRoute>
             }
           />
 
-        <Route
-            path='/editprofile'
+          <Route
+            path="/editprofile"
             element={
-              <PrivateRoute
-                redirectPath='/noaccess'
-                role='admin'>
+              <PrivateRoute redirectPath="/noaccess" role="admin">
                 <EditProfile />
               </PrivateRoute>
             }
           />
 
-        <Route
-            path='/historyadmin'
+          <Route
+            path="/historyadmin"
             element={
-              <PrivateRoute
-                redirectPath='/noaccess'
-                role='admin'>
+              <PrivateRoute redirectPath="/noaccess" role="admin">
                 <HistoryAdmin />
               </PrivateRoute>
             }
@@ -69,41 +59,62 @@ const Routers = () => {
 
           {/* Private Routes User */}
           <Route
-            path='/homeuser'
+            path="/homeuser"
             element={
-              <PrivateRoute
-                redirectPath='/noaccess'
-                role='user'>
+              <PrivateRoute redirectPath="/noaccess" role="user">
                 <HomeUser />
               </PrivateRoute>
             }
           />
 
           <Route
-            path='/editprofileuser'
+            path="/editprofileuser"
             element={
-              <PrivateRoute
-                redirectPath='/noaccess'
-                role='user'>
+              <PrivateRoute redirectPath="/noaccess" role="user">
                 <EditProfileUser />
               </PrivateRoute>
             }
           />
 
           <Route
-            path='/historyuser'
+            path="/historyuser"
             element={
-              <PrivateRoute
-                redirectPath='/noaccess'
-                role='user'>
+              <PrivateRoute redirectPath="/noaccess" role="user">
                 <HistoryUser />
               </PrivateRoute>
             }
           />
 
+          {/* Private Routes Super Admin */}
+          <Route
+            path="/home"
+            element={
+              <PrivateRoute redirectPath="/noaccess" role="super-admin">
+                <HomeUserPanicButton />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/editprofile"
+            element={
+              <PrivateRoute redirectPath="/noaccess" role="super-admin">
+                <EditProfile />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path="/historyadmin"
+            element={
+              <PrivateRoute redirectPath="/noaccess" role="super-admin">
+                <HistoryAdmin />
+              </PrivateRoute>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
   );
-}
-export default Routers
+};
+export default Routers;

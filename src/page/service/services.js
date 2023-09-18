@@ -35,6 +35,9 @@ class Service {
   GetAllDevice(data) {
     return Http.post("devices/getalldevice", data, { headers: authHeader() });
   }
+  GetAllDeviceUser(data) {
+    return Http.post("devices/user-device", data, { headers: authHeader() });
+  }
   UpdateDevice(guid, data) {
     return Http.post("devices/updatedevice/"+guid, data, { headers: authHeader() });
   }

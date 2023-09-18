@@ -54,6 +54,8 @@ const LoginPage = () => {
   if (redirectToReferrer) {
     if (userRole === "admin") {
       return <Navigate to="/home" />;
+    }else if(userRole === "super-admin"){
+      return <Navigate to="/home" />;
     } else if (userRole === "user") {
       return <Navigate to="/homeuser" />;
     }
